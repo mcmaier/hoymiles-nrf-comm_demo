@@ -51,9 +51,11 @@ Therefore it is neccessary to initiate the communication. Packets sent by the us
 ### Data packet structure
 The data packets seem to be structured like this:
 
-| Command Byte | Receiver Address | Transmitter Address | Flag & Packet ID | Data ID | Data | CRC8 |
+| Command Byte | Receiver Address | Transmitter Address | Last Packet Flag & Packet ID | Data ID | Data | CRC8 |
 |---|---|---|---|---|---|---|
 | 1 Byte | 4 Byte | 4 Byte | 1 Byte | 1 Byte | 0..16 Byte | 1 Byte |
+
+The *Last Packet Flag* is Bit 7 (0b1000 0000) of the Packet ID and seems to be one, when no further packets will be transmitted by the sender in this sequence.  
 
 ### CRC checking
 
@@ -62,7 +64,41 @@ It is calculated over the complete data packet from command byte to last data by
 
 ### Packet contents
 
+Data values with 2 and 4 Bytes are transmitted in Big Endian.
+
 The following data packets have been identified by now:
 
+### Request sequences
 
-Type Length 
+|Request Type| Sender| Length| Command Byte|Packet ID|Data ID|Fields|Response Sequence|
+|---|---|---|---|---|---|---|---|
+|1|DTU | 11 | 0x15| 0x81 | -| - | 1 |
+|2|DTU | 27 | 0x15| 0x80 |0x0B | Unix Time, Unknown | 2 |
+|3|DTU | 27 | 0x15| 0x80 |0x11 | Unix Time, Unknown | 3 |
+
+### Response sequences
+
+Response Sequence Nr. 1
+
+|Packet Nr| Sender| Length| Command Byte|Packet ID|Fields|
+|---|---|---|---|---|---|
+|1|INV | 27 | 0x95| 0x01 | Panel Input values (V, A, W) |
+
+Response Sequence Nr. 2
+
+|Packet Nr| Sender| Length| Command Byte|Packet ID|Fields|
+|---|---|---|---|---|---|
+|1|INV | 27 | 0x95| 0x01 |  |
+|2|INV | 27 | 0x95| 0x02 |  Line Output values (V, Hz, W) |
+|3|INV | 22 | 0x95| 0x83 |  |
+
+
+Response Sequence Nr. 3
+
+|Packet Nr| Sender| Length| Command Byte|Packet ID|Fields|
+|---|---|---|---|---|---|
+|1|INV | 27 | 0x95| 0x01 |  |
+|2|INV | 27 | 0x95| 0x02 |  |
+|3|INV | 27 | 0x95| 0x03 |  |
+|4|INV | 27 | 0x95| 0x04 |  |
+|5|INV | 22 | 0x95| 0x85 |  |
