@@ -9,6 +9,7 @@
     "AVR.device.frequency": 10000000,
     "files.associations": {
         "stdbool.h": "c",
-        "inttypes.h": "c"
+        "inttypes.h": "c",
+        "sleep.h": "c"
     }
 }

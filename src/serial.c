@@ -39,6 +39,8 @@ static bool serial__tx_busy;
 
 static uint8_t writebuf[UART_TX_BUFFER_LENGTH];
 
+extern uint32_t sys_timer;
+
 //Debug messages
 //-----------------------------------------------------------------------------
 
@@ -49,7 +51,7 @@ uint8_t const message_buffer[MESSAGES][UART_TX_BUFFER_LENGTH] PROGMEM =
         "Hoymiles NRF Interface\r\n",
         "----------------------\r\n",
         "Enter date YYYYMMDD: ",
-        "Enter time HH-MM-SS: ",
+        "Enter time HHMMSS: ",
         "Enter DTU serial(last 8 digt): ",
         "Enter INV serial(last 8 digt): ",
         "Init incomplete\r\n",
@@ -113,16 +115,7 @@ uint8_t parse_serial_input(uint8_t parse_nr)
   uint8_t ret_value = 0xFF;
   uint8_t rx_buffer[16];
 
-  uint8_t st_year[6] = {0};
-  uint8_t st_month[4]= {0};
-  uint8_t st_day[4]= {0};
-  
-  static uint16_t year;
-  static uint8_t day;
-  static uint8_t month;
-  static uint8_t hour;
-  static uint8_t minute;
-  static uint8_t second;
+  volatile uint32_t temp;
 
   nr_of_bytes = uart_available();
 
@@ -138,25 +131,66 @@ uint8_t parse_serial_input(uint8_t parse_nr)
     switch (parse_nr)
     {
       case 0: 
-        memcpy(year,rx_buffer,4);
-        memcpy(month,rx_buffer + 4,2);
-        memcpy(day,rx_buffer + 6,2);
+        // Get year        
+        temp =  (rx_buffer[0] - '0')*1000 + (rx_buffer[1] - '0')*100 + (rx_buffer[2] - '0')*10 + (rx_buffer[3] - '0');
+        // Add years to sys tick
+         sys_timer = (temp - 1970)*31556926;
 
-        year = atoi(st_year);
-        month = atoi(st_month);
-        day = atoi(st_day);
+        // Get month        
+        temp =  (rx_buffer[4] - '0')*10 + (rx_buffer[5] - '0');
+        // Add months to sys tick
+         sys_timer += temp*2629743; 
+
+        // Get day        
+        temp =  (rx_buffer[6] - '0')*10 + (rx_buffer[7] - '0');
+        // Add days to sys tick
+        sys_timer += temp*86400;   
 
         uart_putc_arr(rx_buffer,nr_of_bytes);
+
+        ret_value = 0;
+        
         break;
 
-      case 1:
+      case 1:      
+       // Get hours        
+        temp =  (rx_buffer[0] - '0')*10 + (rx_buffer[1] - '0');
+        sys_timer += temp*3600;
+
+        // Get minutes        
+        temp =  (rx_buffer[2] - '0')*10 + (rx_buffer[3] - '0');
+        sys_timer += temp*60; 
+
+        // Get seconds        
+        temp =  (rx_buffer[4] - '0')*10 + (rx_buffer[5] - '0');
+        sys_timer += temp; 
+
+        uart_putc_arr(rx_buffer,nr_of_bytes);
+        ret_value = 1;
         break;
 
       case 2:
-        break;
+
+      ((uint8_t*)&temp)[0] =  (rx_buffer[0] - '0')*16 + (rx_buffer[1] - '0');
+      ((uint8_t*)&temp)[1] =  (rx_buffer[2] - '0')*16 + (rx_buffer[3] - '0');
+      ((uint8_t*)&temp)[2] =  (rx_buffer[4] - '0')*16 + (rx_buffer[5] - '0');
+      ((uint8_t*)&temp)[3] =  (rx_buffer[6] - '0')*16 + (rx_buffer[7] - '0');
+
+      messaging_set_dtu_address((uint8_t*) &temp);
+      uart_putc_arr(rx_buffer,nr_of_bytes);
+      ret_value = 2;
+      break;
 
       case 3:
-        break;
+      ((uint8_t*)&temp)[0] =  (rx_buffer[0] - '0')*16 + (rx_buffer[1] - '0');
+      ((uint8_t*)&temp)[1] =  (rx_buffer[2] - '0')*16 + (rx_buffer[3] - '0');
+      ((uint8_t*)&temp)[2] =  (rx_buffer[4] - '0')*16 + (rx_buffer[5] - '0');
+      ((uint8_t*)&temp)[3] =  (rx_buffer[6] - '0')*16 + (rx_buffer[7] - '0');
+
+      messaging_set_inv_address((uint8_t*) &temp);
+      uart_putc_arr(rx_buffer,nr_of_bytes);
+      ret_value = 3;
+      break;
 
       default:
         break;

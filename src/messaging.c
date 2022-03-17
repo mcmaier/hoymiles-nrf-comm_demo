@@ -40,32 +40,6 @@
 // DEFINITIONS
 //******************************************************************************
 
-#define DTU_PING__PACKET_ID 		0x81
-#define DTU_PING__DATA_LENGTH 		0		
-
-#define DTU_DATETIME__PACKET_ID 	0x80
-#define DTU_DATETIME__DATA_LENGTH 	16		
-
-#define INV_01__PACKET_ID 			0x01
-#define INV_01__DATA_LENGTH 		16		
-
-#define INV_02__PACKET_ID 			0x02
-#define INV_02__DATA_LENGTH 		16		
-
-#define INV_03__PACKET_ID 			0x03
-#define INV_03__DATA_LENGTH 		16		
-
-#define INV_04__PACKET_ID 			0x04
-#define INV_04__DATA_LENGTH 		16		
-
-#define INV_83__PACKET_ID 			0x83
-#define INV_83__DATA_LENGTH 		12	
-
-#define INV_85__PACKET_ID 			0x85
-#define INV_85__DATA_LENGTH 		12		
-
-#define INVALID__PACKET_ID 			0xFF
-#define INVALID__DATA_LENGTH 		0	
 
 
 //******************************************************************************
@@ -102,6 +76,11 @@ void messaging_set_inv_address(uint8_t* input)
 //******************************************************************************
 // PARSER 
 //******************************************************************************
+
+void messaging_prepare_tx_message(Message_set_t* msg)
+{
+	message_builder(msg);
+}
 
 // parses the message according to its type
 //------------------------------------------------------------------------------
@@ -149,28 +128,46 @@ void message_parser(uint8_t* message)
 
 // parses the message according to its type
 //------------------------------------------------------------------------------
-uint8_t message_builder(Message_t* message, uint8_t id)
+uint8_t message_builder(Message_t* msg)
 {
-	if(id == DTU_PING__PACKET_ID)
-	{
-		message->command = 0x15;
-		//message->rx_address = 0;
-		//message->tx_address = 0;
-		//message->crc8 = crc8_calc());
+	uint8_t temp_crc[2];
 
-		return DTU_PING__PACKET_ID;
+	memset(msg->message_buffer,0,MAX_MSG_BUF_LENGTH);
+
+	msg->message_buffer[0] = msg->command;
+	memcpy(&(msg->message_buffer[1]),msg->rx_address,4);
+	memcpy(&(msg->message_buffer[5]),msg->tx_address,4);
+	msg->message_buffer[9] = msg->message_type.msg_packet_id;
+
+	if(msg->message_type.msg_packet_id == DTU_PING__PACKET_ID)
+	{
+		msg->crc8 = crc8_calc(msg->message_buffer,10);
+		msg->message_buffer[10] = msg->crc8;
+		
+		return (uint8_t)DTU_PING__PACKET_ID;
 	}
-	else if(id == DTU_DATETIME__PACKET_ID)
+	else if(msg->message_type.msg_packet_id == DTU_DATETIME__PACKET_ID)
 	{
-		message->command = 0x15;
+		msg->message_buffer[10] = 0x0B;	
 
-		return DTU_DATETIME__PACKET_ID;
+		msg->message_buffer[12] = ((uint8_t*)&sys_timer)[3];
+		msg->message_buffer[13] = ((uint8_t*)&sys_timer)[2];
+		msg->message_buffer[14] = ((uint8_t*)&sys_timer)[1];
+		msg->message_buffer[15] = ((uint8_t*)&sys_timer)[0];
+
+		*((uint16_t*)temp_crc) = crc16_calc((uint8_t*)(&(msg->message_buffer[10])),14);
+
+		msg->message_buffer[9 + msg->message_type.msg_data_length] = temp_crc[0];
+		msg->message_buffer[8 + msg->message_type.msg_data_length] = temp_crc[1];
+
+		msg->crc8 = crc8_calc(msg->message_buffer,(10 + msg->message_type.msg_data_length));
+		msg->message_buffer[10 + msg->message_type.msg_data_length] = msg->crc8;
+		return (uint8_t)DTU_DATETIME__PACKET_ID;
 	}
 	else
 	{
 		return 0;
 	}
-
 }
     
 

@@ -41,6 +41,9 @@
 volatile uint8_t PTX;
 States_t main_state;
 
+uint8_t sys_tick;
+uint32_t sys_timer;
+
 ISR(INT0_vect)
 {
     volatile uint8_t status;   
@@ -94,6 +97,12 @@ ISR(SPI_STC_vect)
 ISR(TIMER1_COMPA_vect)
 {
 	event_push(EVENT_timer_tick);
+
+	if(!sys_tick--)
+	{
+		sys_tick = 99;
+		sys_timer++;
+	}
 }
 
 int main(void)
@@ -103,7 +112,7 @@ int main(void)
 	state_machine__init();
 		
 	_delay_ms(50);
-	
+
 	sei();
 
 	while(1)

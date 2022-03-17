@@ -30,6 +30,7 @@
 #include "statemachine.h"
 #include "uart.h"
 #include "serial.h"
+#include "messaging.h"
 //#include "ringbuffer.h"
 
 //#include "calculation.h"
@@ -41,6 +42,8 @@
 extern volatile uint8_t PTX;
 static uint32_t timer;
 static uint8_t init_step;
+
+extern uint32_t sys_timer;
 
 //static uint8_t payload[16];
 
@@ -164,9 +167,9 @@ States_t STATE_init__handler(Events_t event)
 					ret_state = STATE_error;
 				}	
 
-				if((timer & 0x80) == 0x80)	
+				if((timer & 0x7F) == 0x01)	
 				{
-					LED1_TOGGLE;
+					LED1_TOGGLE;					
 				}														
 			break;
 
@@ -189,10 +192,25 @@ States_t STATE_receive__handler(Events_t event)
 {
 	States_t ret_state = STATE_receive;
 	
-	/*
+	
 	switch(event)
 	{	
-		case EVENT_timer_tick:				
+		case EVENT_timer_tick:
+			if(timer++ > 500)
+			{
+				timer = 0;
+				ret_state = STATE_transmit;
+			}
+
+		break;
+
+		default:
+		break;
+	}
+
+	return ret_state;
+}				
+/*
 			if(timer++ == 0)
 			{
 				//LED1_ON;			
@@ -241,9 +259,6 @@ States_t STATE_receive__handler(Events_t event)
 			break;
 	}
 	*/
-	
-	return ret_state;
-}	
 
 //----------------------------------------------------------
 // TRANSMIT STATE HANDLER
@@ -253,11 +268,31 @@ States_t STATE_transmit__handler(Events_t event)
 {
 	States_t ret_state = STATE_transmit;
 
-	/*
-
 	switch(event)
 	{	
 		case EVENT_timer_tick:	
+			if(timer++ == 1)
+			{
+				LED2_ON;
+				message_builder(&tx_message);
+
+				uart_putc_arr(tx_message.message_buffer,tx_message.message_type.msg_data_length + 11);
+				uart_puts_P("\r\n");
+			}
+			else if(timer == 10)
+			{
+				LED2_OFF;
+				ret_state = STATE_receive;
+			}
+		break;
+
+		default:
+		break;
+	}
+
+	return ret_state;
+}
+/*
 				
 			if(timer++ == 0)
 			{		
@@ -348,10 +383,6 @@ States_t STATE_transmit__handler(Events_t event)
 	}
 
 	*/
-	
-	return ret_state;
-}	
-
 
 //----------------------------------------------------------
 // STATE ENTRY FUNCTIONS
@@ -386,4 +417,9 @@ void STATE_receive__entering_handler(void)
 void STATE_transmit__entering_handler(void)
 {
 	timer = 0;
+	tx_message.command = 0x15;
+	memcpy(tx_message.tx_address,dtu_address,4);
+	memcpy(tx_message.rx_address,inv_address,4);	
+	tx_message.message_type.msg_packet_id = DTU_DATETIME__PACKET_ID;
+	tx_message.message_type.msg_data_length = DTU_DATETIME__DATA_LENGTH;
 }
