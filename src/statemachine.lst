@@ -1,0 +1,436 @@
+   1               		.file	"statemachine.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	state_machine__init
+  12               	state_machine__init:
+  13               	.LFB0:
+  14               		.file 1 "statemachine.c"
+   1:statemachine.c **** 
+   2:statemachine.c **** /*
+   3:statemachine.c **** 	Copyright (c) 2022 by Martin Maier (martin@mcmaier.net)
+   4:statemachine.c **** 	
+   5:statemachine.c ****     Permission is hereby granted, free of charge, to any person 
+   6:statemachine.c ****     obtaining a copy of this software and associated documentation 
+   7:statemachine.c ****     files (the "Software"), to deal in the Software without 
+   8:statemachine.c ****     restriction, including without limitation the rights to use, copy, 
+   9:statemachine.c ****     modify, merge, publish, distribute, sublicense, and/or sell copies 
+  10:statemachine.c ****     of the Software, and to permit persons to whom the Software is 
+  11:statemachine.c ****     furnished to do so, subject to the following conditions:
+  12:statemachine.c **** 
+  13:statemachine.c ****     The above copyright notice and this permission notice shall be 
+  14:statemachine.c ****     included in all copies or substantial portions of the Software.
+  15:statemachine.c **** 
+  16:statemachine.c ****     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+  17:statemachine.c ****     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+  18:statemachine.c ****     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+  19:statemachine.c ****     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+  20:statemachine.c ****     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+  21:statemachine.c ****     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+  22:statemachine.c ****     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+  23:statemachine.c ****     DEALINGS IN THE SOFTWARE.    
+  24:statemachine.c **** */
+  25:statemachine.c **** 
+  26:statemachine.c **** #ifndef STATEMACHINE_C
+  27:statemachine.c **** #define STATEMACHINE_C
+  28:statemachine.c **** 
+  29:statemachine.c **** #include "statemachine.h"
+  30:statemachine.c **** 
+  31:statemachine.c **** #include <stddef.h>
+  32:statemachine.c **** #include <stdint.h>
+  33:statemachine.c **** #include <stdbool.h>
+  34:statemachine.c **** 
+  35:statemachine.c **** //******************************************************************************
+  36:statemachine.c **** // VARIABLES
+  37:statemachine.c **** //******************************************************************************
+  38:statemachine.c **** 
+  39:statemachine.c **** static bool state_machine__initialized;
+  40:statemachine.c **** States_t state_machine__current_state;
+  41:statemachine.c **** 
+  42:statemachine.c **** //******************************************************************************
+  43:statemachine.c **** // FUNCTION POINTERS
+  44:statemachine.c **** //******************************************************************************
+  45:statemachine.c **** 
+  46:statemachine.c **** static States_t (*p_state_machine__state_function[NR_OF_STATES])(Events_t);
+  47:statemachine.c **** static void     (*p_state_machine__state_entering_function[NR_OF_STATES])(void);
+  48:statemachine.c **** 
+  49:statemachine.c **** //******************************************************************************
+  50:statemachine.c **** // FUNCTION DECLARATIONS
+  51:statemachine.c **** //******************************************************************************
+  52:statemachine.c **** 
+  53:statemachine.c **** States_t state_machine__init(void);
+  54:statemachine.c **** 
+  55:statemachine.c **** States_t state_machine__calculate_state(Events_t);
+  56:statemachine.c **** 
+  57:statemachine.c **** //******************************************************************************
+  58:statemachine.c **** // FUNCTIONS
+  59:statemachine.c **** //******************************************************************************
+  60:statemachine.c **** 
+  61:statemachine.c **** // state_machine__init
+  62:statemachine.c **** // Initialize the state machine and the event ringbuffer
+  63:statemachine.c **** //------------------------------------------------------------------------------
+  64:statemachine.c **** 
+  65:statemachine.c **** States_t state_machine__init(void)
+  66:statemachine.c **** {
+  15               		.loc 1 66 0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+  67:statemachine.c ****   ringbuffer__init(&ringbuffer_events, ringbuffer_events__data, EVENT_BUFFER_LENGTH, EVENT_BUFFER_W
+  21               		.loc 1 67 0
+  22 0000 21E0      		ldi r18,lo8(1)
+  23 0002 40E2      		ldi r20,lo8(32)
+  24 0004 60E0      		ldi r22,lo8(ringbuffer_events__data)
+  25 0006 70E0      		ldi r23,hi8(ringbuffer_events__data)
+  26 0008 80E0      		ldi r24,lo8(ringbuffer_events)
+  27 000a 90E0      		ldi r25,hi8(ringbuffer_events)
+  28 000c 00D0      		rcall ringbuffer__init
+  29               	.LVL0:
+  68:statemachine.c **** 
+  69:statemachine.c ****   //Initialize function pointers
+  70:statemachine.c ****   p_state_machine__state_function[0] = &STATE_error__handler;
+  30               		.loc 1 70 0
+  31 000e E0E0      		ldi r30,lo8(p_state_machine__state_function)
+  32 0010 F0E0      		ldi r31,hi8(p_state_machine__state_function)
+  33 0012 80E0      		ldi r24,lo8(gs(STATE_error__handler))
+  34 0014 90E0      		ldi r25,hi8(gs(STATE_error__handler))
+  35 0016 9183      		std Z+1,r25
+  36 0018 8083      		st Z,r24
+  71:statemachine.c ****   p_state_machine__state_function[1] = &STATE_start__handler;
+  37               		.loc 1 71 0
+  38 001a 80E0      		ldi r24,lo8(gs(STATE_start__handler))
+  39 001c 90E0      		ldi r25,hi8(gs(STATE_start__handler))
+  40 001e 9383      		std Z+3,r25
+  41 0020 8283      		std Z+2,r24
+  72:statemachine.c ****   p_state_machine__state_function[2] = &STATE_init__handler;
+  42               		.loc 1 72 0
+  43 0022 80E0      		ldi r24,lo8(gs(STATE_init__handler))
+  44 0024 90E0      		ldi r25,hi8(gs(STATE_init__handler))
+  45 0026 9583      		std Z+5,r25
+  46 0028 8483      		std Z+4,r24
+  73:statemachine.c ****   p_state_machine__state_function[3] = &STATE_receive__handler;
+  47               		.loc 1 73 0
+  48 002a 80E0      		ldi r24,lo8(gs(STATE_receive__handler))
+  49 002c 90E0      		ldi r25,hi8(gs(STATE_receive__handler))
+  50 002e 9783      		std Z+7,r25
+  51 0030 8683      		std Z+6,r24
+  74:statemachine.c ****   p_state_machine__state_function[4] = &STATE_transmit__handler;
+  52               		.loc 1 74 0
+  53 0032 80E0      		ldi r24,lo8(gs(STATE_transmit__handler))
+  54 0034 90E0      		ldi r25,hi8(gs(STATE_transmit__handler))
+  55 0036 9187      		std Z+9,r25
+  56 0038 8087      		std Z+8,r24
+  75:statemachine.c **** 
+  76:statemachine.c ****   p_state_machine__state_entering_function[0] = &STATE_error__entering_handler;
+  57               		.loc 1 76 0
+  58 003a E0E0      		ldi r30,lo8(p_state_machine__state_entering_function)
+  59 003c F0E0      		ldi r31,hi8(p_state_machine__state_entering_function)
+  60 003e 80E0      		ldi r24,lo8(gs(STATE_error__entering_handler))
+  61 0040 90E0      		ldi r25,hi8(gs(STATE_error__entering_handler))
+  62 0042 9183      		std Z+1,r25
+  63 0044 8083      		st Z,r24
+  77:statemachine.c ****   p_state_machine__state_entering_function[1] = &STATE_start__entering_handler;
+  64               		.loc 1 77 0
+  65 0046 80E0      		ldi r24,lo8(gs(STATE_start__entering_handler))
+  66 0048 90E0      		ldi r25,hi8(gs(STATE_start__entering_handler))
+  67 004a 9383      		std Z+3,r25
+  68 004c 8283      		std Z+2,r24
+  78:statemachine.c ****   p_state_machine__state_entering_function[2] = &STATE_init__entering_handler;
+  69               		.loc 1 78 0
+  70 004e 80E0      		ldi r24,lo8(gs(STATE_init__entering_handler))
+  71 0050 90E0      		ldi r25,hi8(gs(STATE_init__entering_handler))
+  72 0052 9583      		std Z+5,r25
+  73 0054 8483      		std Z+4,r24
+  79:statemachine.c ****   p_state_machine__state_entering_function[3] = &STATE_receive__entering_handler;
+  74               		.loc 1 79 0
+  75 0056 80E0      		ldi r24,lo8(gs(STATE_receive__entering_handler))
+  76 0058 90E0      		ldi r25,hi8(gs(STATE_receive__entering_handler))
+  77 005a 9783      		std Z+7,r25
+  78 005c 8683      		std Z+6,r24
+  80:statemachine.c ****   p_state_machine__state_entering_function[4] = &STATE_transmit__entering_handler;
+  79               		.loc 1 80 0
+  80 005e 80E0      		ldi r24,lo8(gs(STATE_transmit__entering_handler))
+  81 0060 90E0      		ldi r25,hi8(gs(STATE_transmit__entering_handler))
+  82 0062 9187      		std Z+9,r25
+  83 0064 8087      		std Z+8,r24
+  81:statemachine.c **** 
+  82:statemachine.c ****   state_machine__current_state = STATE_start;
+  84               		.loc 1 82 0
+  85 0066 81E0      		ldi r24,lo8(1)
+  86 0068 8093 0000 		sts state_machine__current_state,r24
+  83:statemachine.c ****   state_machine__initialized = true;
+  87               		.loc 1 83 0
+  88 006c 8093 0000 		sts state_machine__initialized,r24
+  84:statemachine.c **** 
+  85:statemachine.c ****   return state_machine__current_state;
+  86:statemachine.c **** }
+  89               		.loc 1 86 0
+  90 0070 0895      		ret
+  91               		.cfi_endproc
+  92               	.LFE0:
+  94               	.global	state_machine__calculate_state
+  96               	state_machine__calculate_state:
+  97               	.LFB1:
+  87:statemachine.c **** 
+  88:statemachine.c **** //states_t state_machine__calculate_state(events_t event)
+  89:statemachine.c **** //Calculates the new state depending on the input event
+  90:statemachine.c **** //Returns: Next state
+  91:statemachine.c **** //------------------------------------------------------------------------------
+  92:statemachine.c **** States_t state_machine__calculate_state(Events_t event)
+  93:statemachine.c **** {
+  98               		.loc 1 93 0
+  99               		.cfi_startproc
+ 100               	.LVL1:
+ 101 0072 CF93      		push r28
+ 102               	.LCFI0:
+ 103               		.cfi_def_cfa_offset 3
+ 104               		.cfi_offset 28, -2
+ 105               	/* prologue: function */
+ 106               	/* frame size = 0 */
+ 107               	/* stack size = 1 */
+ 108               	.L__stack_usage = 1
+ 109               	.LVL2:
+  94:statemachine.c ****   States_t new_state = state_machine__current_state;
+  95:statemachine.c **** 
+  96:statemachine.c ****   if(!state_machine__initialized)
+ 110               		.loc 1 96 0
+ 111 0074 9091 0000 		lds r25,state_machine__initialized
+ 112 0078 9923      		tst r25
+ 113 007a 01F0      		breq .L5
+  97:statemachine.c ****   {
+  98:statemachine.c ****     return STATE_error;
+  99:statemachine.c ****   }
+ 100:statemachine.c ****   else
+ 101:statemachine.c ****   {
+ 102:statemachine.c ****     //Call state function
+ 103:statemachine.c ****     new_state = p_state_machine__state_function[(uint8_t)state_machine__current_state](event);
+ 114               		.loc 1 103 0
+ 115 007c E091 0000 		lds r30,state_machine__current_state
+ 116 0080 F0E0      		ldi r31,0
+ 117 0082 EE0F      		lsl r30
+ 118 0084 FF1F      		rol r31
+ 119 0086 E050      		subi r30,lo8(-(p_state_machine__state_function))
+ 120 0088 F040      		sbci r31,hi8(-(p_state_machine__state_function))
+ 121 008a 0190      		ld __tmp_reg__,Z+
+ 122 008c F081      		ld r31,Z
+ 123 008e E02D      		mov r30,__tmp_reg__
+ 124 0090 0995      		icall
+ 125               	.LVL3:
+ 126 0092 C82F      		mov r28,r24
+ 127               	.LVL4:
+ 104:statemachine.c **** 
+ 105:statemachine.c ****     //If state has changed, call new state entering function
+ 106:statemachine.c ****     if (new_state != state_machine__current_state)
+ 128               		.loc 1 106 0
+ 129 0094 8091 0000 		lds r24,state_machine__current_state
+ 130               	.LVL5:
+ 131 0098 C817      		cp r28,r24
+ 132 009a 01F0      		breq .L4
+ 107:statemachine.c ****     {
+ 108:statemachine.c ****       p_state_machine__state_entering_function[(uint8_t)new_state]();
+ 133               		.loc 1 108 0
+ 134 009c EC2F      		mov r30,r28
+ 135 009e F0E0      		ldi r31,0
+ 136 00a0 EE0F      		lsl r30
+ 137 00a2 FF1F      		rol r31
+ 138 00a4 E050      		subi r30,lo8(-(p_state_machine__state_entering_function))
+ 139 00a6 F040      		sbci r31,hi8(-(p_state_machine__state_entering_function))
+ 140 00a8 0190      		ld __tmp_reg__,Z+
+ 141 00aa F081      		ld r31,Z
+ 142 00ac E02D      		mov r30,__tmp_reg__
+ 143 00ae 0995      		icall
+ 144               	.LVL6:
+ 109:statemachine.c ****       state_machine__current_state = new_state;
+ 145               		.loc 1 109 0
+ 146 00b0 C093 0000 		sts state_machine__current_state,r28
+ 147               	.L4:
+ 110:statemachine.c ****     }
+ 111:statemachine.c **** 
+ 112:statemachine.c ****     return state_machine__current_state;
+ 148               		.loc 1 112 0
+ 149 00b4 8091 0000 		lds r24,state_machine__current_state
+ 150 00b8 00C0      		rjmp .L3
+ 151               	.LVL7:
+ 152               	.L5:
+  98:statemachine.c ****   }
+ 153               		.loc 1 98 0
+ 154 00ba 80E0      		ldi r24,0
+ 155               	.LVL8:
+ 156               	.L3:
+ 157               	/* epilogue start */
+ 113:statemachine.c ****   }   
+ 114:statemachine.c **** }
+ 158               		.loc 1 114 0
+ 159 00bc CF91      		pop r28
+ 160 00be 0895      		ret
+ 161               		.cfi_endproc
+ 162               	.LFE1:
+ 164               	.global	event_push
+ 166               	event_push:
+ 167               	.LFB2:
+ 115:statemachine.c **** 
+ 116:statemachine.c **** // event_push
+ 117:statemachine.c **** // Pushes an event into the ringbuffer
+ 118:statemachine.c **** //------------------------------------------------------------------------------
+ 119:statemachine.c **** uint8_t event_push(Events_t event)
+ 120:statemachine.c **** {
+ 168               		.loc 1 120 0
+ 169               		.cfi_startproc
+ 170               	.LVL9:
+ 171 00c0 CF93      		push r28
+ 172               	.LCFI1:
+ 173               		.cfi_def_cfa_offset 3
+ 174               		.cfi_offset 28, -2
+ 175 00c2 DF93      		push r29
+ 176               	.LCFI2:
+ 177               		.cfi_def_cfa_offset 4
+ 178               		.cfi_offset 29, -3
+ 179 00c4 1F92      		push __zero_reg__
+ 180               	.LCFI3:
+ 181               		.cfi_def_cfa_offset 5
+ 182 00c6 CDB7      		in r28,__SP_L__
+ 183 00c8 DEB7      		in r29,__SP_H__
+ 184               	.LCFI4:
+ 185               		.cfi_def_cfa_register 28
+ 186               	/* prologue: function */
+ 187               	/* frame size = 1 */
+ 188               	/* stack size = 3 */
+ 189               	.L__stack_usage = 3
+ 121:statemachine.c ****     Events_t temp_event = event;
+ 190               		.loc 1 121 0
+ 191 00ca 8983      		std Y+1,r24
+ 122:statemachine.c ****     Ringbuffer_State_t bufstate = ringbuffer__push(&ringbuffer_events,(uint8_t*)&temp_event);
+ 192               		.loc 1 122 0
+ 193 00cc BE01      		movw r22,r28
+ 194 00ce 6F5F      		subi r22,-1
+ 195 00d0 7F4F      		sbci r23,-1
+ 196 00d2 80E0      		ldi r24,lo8(ringbuffer_events)
+ 197 00d4 90E0      		ldi r25,hi8(ringbuffer_events)
+ 198               	.LVL10:
+ 199 00d6 00D0      		rcall ringbuffer__push
+ 200               	.LVL11:
+ 201 00d8 9EEF      		ldi r25,lo8(-2)
+ 202 00da 980F      		add r25,r24
+ 203 00dc 81E0      		ldi r24,lo8(1)
+ 204               	.LVL12:
+ 205 00de 9230      		cpi r25,lo8(2)
+ 206 00e0 00F0      		brlo .L8
+ 207 00e2 80E0      		ldi r24,0
+ 208               	.L8:
+ 209               	/* epilogue start */
+ 123:statemachine.c **** 
+ 124:statemachine.c ****     if((bufstate == BUFFER_normal) || (bufstate == BUFFER_full))
+ 125:statemachine.c ****     {
+ 126:statemachine.c ****         return 1;
+ 127:statemachine.c ****     }
+ 128:statemachine.c ****     else
+ 129:statemachine.c ****     {
+ 130:statemachine.c ****         return 0;
+ 131:statemachine.c ****     }
+ 132:statemachine.c **** }
+ 210               		.loc 1 132 0
+ 211 00e4 0F90      		pop __tmp_reg__
+ 212 00e6 DF91      		pop r29
+ 213 00e8 CF91      		pop r28
+ 214 00ea 0895      		ret
+ 215               		.cfi_endproc
+ 216               	.LFE2:
+ 218               	.global	event_get
+ 220               	event_get:
+ 221               	.LFB3:
+ 133:statemachine.c **** 
+ 134:statemachine.c **** // event_get
+ 135:statemachine.c **** // Gets an event out of the ringbuffer by reference
+ 136:statemachine.c **** //------------------------------------------------------------------------------
+ 137:statemachine.c **** uint8_t event_get(Events_t * p_event)
+ 138:statemachine.c **** {
+ 222               		.loc 1 138 0
+ 223               		.cfi_startproc
+ 224               	.LVL13:
+ 225               	/* prologue: function */
+ 226               	/* frame size = 0 */
+ 227               	/* stack size = 0 */
+ 228               	.L__stack_usage = 0
+ 139:statemachine.c ****     Ringbuffer_State_t bufstate = ringbuffer__pop(&ringbuffer_events, (uint8_t *)p_event);
+ 229               		.loc 1 139 0
+ 230 00ec BC01      		movw r22,r24
+ 231 00ee 80E0      		ldi r24,lo8(ringbuffer_events)
+ 232 00f0 90E0      		ldi r25,hi8(ringbuffer_events)
+ 233               	.LVL14:
+ 234 00f2 00D0      		rcall ringbuffer__pop
+ 235               	.LVL15:
+ 236 00f4 9FEF      		ldi r25,lo8(-1)
+ 237 00f6 980F      		add r25,r24
+ 238 00f8 81E0      		ldi r24,lo8(1)
+ 239               	.LVL16:
+ 240 00fa 9230      		cpi r25,lo8(2)
+ 241 00fc 00F0      		brlo .L10
+ 242 00fe 80E0      		ldi r24,0
+ 243               	.L10:
+ 140:statemachine.c **** 
+ 141:statemachine.c ****     if((bufstate == BUFFER_normal) || (bufstate == BUFFER_empty))
+ 142:statemachine.c ****     {
+ 143:statemachine.c ****         return 1;
+ 144:statemachine.c ****     }
+ 145:statemachine.c ****     else
+ 146:statemachine.c ****     {
+ 147:statemachine.c ****         return 0;
+ 148:statemachine.c ****     }
+ 149:statemachine.c **** }
+ 244               		.loc 1 149 0
+ 245 0100 0895      		ret
+ 246               		.cfi_endproc
+ 247               	.LFE3:
+ 249               		.local	p_state_machine__state_entering_function
+ 250               		.comm	p_state_machine__state_entering_function,10,1
+ 251               		.local	p_state_machine__state_function
+ 252               		.comm	p_state_machine__state_function,10,1
+ 253               		.comm	state_machine__current_state,1,1
+ 254               		.local	state_machine__initialized
+ 255               		.comm	state_machine__initialized,1,1
+ 256               		.comm	ringbuffer_events__data,32,1
+ 257               		.comm	ringbuffer_events,8,1
+ 258               	.Letext0:
+ 259               		.file 2 "c:\\winavr-20100110\\avr\\include\\stdint.h"
+ 260               		.file 3 "ringbuffer.h"
+ 261               		.file 4 "statemachine.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 statemachine.c
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:2      *ABS*:0000003e __SP_H__
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:3      *ABS*:0000003d __SP_L__
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:4      *ABS*:0000003f __SREG__
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:5      *ABS*:00000000 __tmp_reg__
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:6      *ABS*:00000001 __zero_reg__
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:12     .text:00000000 state_machine__init
+                            *COM*:00000020 ringbuffer_events__data
+                            *COM*:00000008 ringbuffer_events
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:250    .bss:0000000a p_state_machine__state_function
+                             .bss:00000000 p_state_machine__state_entering_function
+                            *COM*:00000001 state_machine__current_state
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:252    .bss:00000014 state_machine__initialized
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:96     .text:00000072 state_machine__calculate_state
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:166    .text:000000c0 event_push
+C:\Users\mcmai\AppData\Local\Temp\ccRTVnZo.s:220    .text:000000ec event_get
+
+UNDEFINED SYMBOLS
+ringbuffer__init
+STATE_error__handler
+STATE_start__handler
+STATE_init__handler
+STATE_receive__handler
+STATE_transmit__handler
+STATE_error__entering_handler
+STATE_start__entering_handler
+STATE_init__entering_handler
+STATE_receive__entering_handler
+STATE_transmit__entering_handler
+ringbuffer__push
+ringbuffer__pop
+__do_clear_bss

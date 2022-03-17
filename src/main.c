@@ -1,4 +1,4 @@
-/*
+/*																																										/*
 	Copyright (c) 2022 by Martin Maier (martin@mcmaier.net)
 	
     Permission is hereby granted, free of charge, to any person 
@@ -31,12 +31,12 @@
 #include <util/delay.h>
 
 #include "statemachine.h"
-#include "calculation.h"
 #include "hardware.h"
 #include "wl_module.h"
 #include "spi.h"
 #include "nRF24L01.h"
 #include "uart.h"
+#include "crc.h"
 
 volatile uint8_t PTX;
 States_t main_state;
@@ -103,17 +103,18 @@ int main(void)
 	state_machine__init();
 		
 	_delay_ms(50);
-
+	
 	sei();
 
 	while(1)
-    {
+    {		
+		/*
 		Events_t temp_event;
 
 		while (event_get(&temp_event))
 		{
 			main_state = state_machine__calculate_state(temp_event);
-		}
+		}*/
 	}
 }
 

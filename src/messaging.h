@@ -22,8 +22,8 @@
     DEALINGS IN THE SOFTWARE.    
 */
 
-#ifndef CALCULATION_H
-#define CALCULATION_H
+#ifndef MESSAGING_H
+#define MESSAGING_H
 
 #include <inttypes.h>
 #include <stdbool.h>
@@ -32,11 +32,49 @@
 // CONDITIONAL COMPILATION
 //******************************************************************************
 
-#ifdef CALCULATION_C
-#define XTRN_CALCULATION
+#ifdef MESSAGING_C
+#define XTRN_MESSAGING
 #else
-#define XTRN_CALCULATION extern
+#define XTRN_MESSAGING extern
 #endif
+
+//******************************************************************************
+// DEFINITIONS
+//******************************************************************************
+
+#define MAX_MSG_BUF_LENGTH 32
+
+typedef struct
+{
+    uint8_t msg_packet_id;
+    uint8_t msg_data_length;      
+} Message_type_t;
+
+typedef struct 
+{    
+    Message_type_t dtu_ping;
+    Message_type_t dtu_datetime;
+    Message_type_t inverter_01;
+    Message_type_t inverter_02;
+    Message_type_t inverter_03;
+    Message_type_t inverter_04;
+    Message_type_t inverter_83;
+    Message_type_t inverter_85;
+    Message_type_t invalid;
+
+} Message_set_t;
+
+typedef struct 
+{
+    uint8_t command;
+    uint8_t rx_address[4];
+    uint8_t tx_address[4];
+    Message_set_t message_type;  
+    uint8_t message_buffer[MAX_MSG_BUF_LENGTH];
+    uint8_t crc8;
+    
+} Message_t;
+
 
 //******************************************************************************
 // FUNCTION DECLARATIONS
@@ -52,4 +90,4 @@ XTRN_CALC void pollSerialBuffer(void);
 XTRN_CALC void parseData(uint8_t*, uint8_t*);
 */
 
-#endif /* CALCULATION_H */
+#endif /* MESSAGING_H */

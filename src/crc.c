@@ -28,12 +28,14 @@
 #define CRC_C
 
 #include "crc.h"
+#include <avr/pgmspace.h>
+
 
 //******************************************************************************
 // INTERNAL VARIABLES
 //******************************************************************************
 
-static uint8_t const crc8_table[] = {
+static uint8_t const crc8_table[256] PROGMEM = {
   0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,
   0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,
   0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2A,0x2B,0x2C,0x2D,0x2E,0x2F,
@@ -53,7 +55,7 @@ static uint8_t const crc8_table[] = {
   };
 
     
-static uint16_t const crc16_table[] = {
+static uint16_t const crc16_table[256] PROGMEM = {
   0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
   0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
   0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -96,39 +98,43 @@ static uint16_t const crc16_table[] = {
 // void const* mem, uint8_t len
 // Polynomial = 0x01, Initial Value = 0
 //------------------------------------------------------------------------------
-uint8_t crc8_calc(uint8_t const *mem, uint8_t len) 
+uint8_t crc8_calc(uint8_t* mem, uint8_t len) 
 {
-    uint8_t crc = 0;
-    uint8_t const *data = mem;
+    volatile uint8_t crc8 = 0;
+    uint8_t table_index = 0;
+    uint8_t *data = mem;
     
     if (data == NULL)
-        return 0xFF;
-    
-    crc &= 0xFF;
+        return 0xFF;        
     
     while (len--)
-        crc = crc8_table[crc ^ *data++];
+    {
+      table_index = *data++^crc8;
+      crc8 = pgm_read_byte(&crc8_table[table_index]);
+    }    
     
-    return crc;
+    return crc8;
 }
 
 // Calculation of CRC16 - MODBUS over a defined buffer
 // void const* mem, uint8_t len
 // Polynomial = 0x8005, Initial Value = 0xFFFF
 //------------------------------------------------------------------------------
-uint8_t crc16_calc(uint8_t const* mem, uint8_t len) 
-{
-  uint8_t n_temp;
-  uint16_t crc = 0xFFFF;
-  uint8_t const *data = mem;
+uint16_t crc16_calc(uint8_t* mem, uint8_t len) 
+{  
+  
+  uint8_t *data = mem;
+  uint16_t crc16 = 0xFFFF;
+  uint8_t xor = 0;
 
-    while (len--)
-    {
-        n_temp = *data++ ^ crc;
-        crc >>= 8;
-        crc  ^= crc16_table[(n_temp & 0xFF)];
-    }
-    return crc;
-}
+	while( len-- )
+	{
+		xor = (*data++) ^ crc16;
+		crc16 >>= 8;
+		crc16 ^= pgm_read_word(&crc16_table[xor]);
+	}
+  
+  return crc16;
+}  
 
-#endif
+#endif /*CRC_C*/

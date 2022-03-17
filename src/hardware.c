@@ -63,7 +63,7 @@ void hardware_init(void)
 	//Baudrate = 57600 bps = 10 @ 10 MHz, U2X = 0
 	UBRR0 = 10;		
 	UCSR0A |= (1 << U2X0);	
-	UCSR0B = (1 << RXCIE0)|(1 << RXEN0)|(1 << TXEN0); 
+	UCSR0B = (1 << RXCIE0)|(1 << RXEN0)|(1 << TXEN0); 	
 }	
 
 #endif

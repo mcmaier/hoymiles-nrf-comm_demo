@@ -47,10 +47,9 @@
 // FUNCTION DECLARATION
 //******************************************************************************
 
-XTRN_CRC uint8_t crc8_calc(uint8_t const*, uint8_t);
+XTRN_CRC uint8_t crc8_calc(uint8_t*, uint8_t);
 
-XTRN_CRC uint16_t crc16_calc(uint8_t const*, uint32_t);
-
+XTRN_CRC uint16_t crc16_calc(uint8_t*, uint8_t);
 
 #endif
 

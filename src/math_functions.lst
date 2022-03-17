@@ -1,0 +1,1012 @@
+   1               		.file	"math_functions.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	absolute
+  12               	absolute:
+  13               	.LFB0:
+  14               		.file 1 "math_functions.c"
+   1:math_functions.c **** /*
+   2:math_functions.c **** 	Copyright (c) 2022 by Martin Maier (martin@mcmaier.net)
+   3:math_functions.c **** 	
+   4:math_functions.c ****     Permission is hereby granted, free of charge, to any person 
+   5:math_functions.c ****     obtaining a copy of this software and associated documentation 
+   6:math_functions.c ****     files (the "Software"), to deal in the Software without 
+   7:math_functions.c ****     restriction, including without limitation the rights to use, copy, 
+   8:math_functions.c ****     modify, merge, publish, distribute, sublicense, and/or sell copies 
+   9:math_functions.c ****     of the Software, and to permit persons to whom the Software is 
+  10:math_functions.c ****     furnished to do so, subject to the following conditions:
+  11:math_functions.c **** 
+  12:math_functions.c ****     The above copyright notice and this permission notice shall be 
+  13:math_functions.c ****     included in all copies or substantial portions of the Software.
+  14:math_functions.c **** 
+  15:math_functions.c ****     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+  16:math_functions.c ****     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+  17:math_functions.c ****     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+  18:math_functions.c ****     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+  19:math_functions.c ****     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+  20:math_functions.c ****     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+  21:math_functions.c ****     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+  22:math_functions.c ****     DEALINGS IN THE SOFTWARE.    
+  23:math_functions.c **** */
+  24:math_functions.c **** 
+  25:math_functions.c **** #ifndef MATHFUNCTIONS_C
+  26:math_functions.c **** #define MATHFUNCTIONS_C
+  27:math_functions.c **** 
+  28:math_functions.c **** #include "math_functions.h"
+  29:math_functions.c **** 
+  30:math_functions.c **** //******************************************************************************
+  31:math_functions.c **** // VARIABLES
+  32:math_functions.c **** //******************************************************************************
+  33:math_functions.c **** 
+  34:math_functions.c **** const double PI = 3.14159265;
+  35:math_functions.c **** 
+  36:math_functions.c **** //******************************************************************************
+  37:math_functions.c **** // INTERNAL FUNCTION DECLARATION
+  38:math_functions.c **** //******************************************************************************
+  39:math_functions.c **** 
+  40:math_functions.c **** //Swap two numbers
+  41:math_functions.c **** void swap(uint8_t *, uint8_t *);
+  42:math_functions.c **** 
+  43:math_functions.c **** //Reverse order of buffer
+  44:math_functions.c **** uint8_t* reverse(uint8_t *buffer, int8_t, int8_t);
+  45:math_functions.c **** 
+  46:math_functions.c **** //******************************************************************************
+  47:math_functions.c **** // FUNCTIONS
+  48:math_functions.c **** //******************************************************************************
+  49:math_functions.c **** 
+  50:math_functions.c **** //Get absolute value of a number
+  51:math_functions.c **** //------------------------------------------------------------------------------
+  52:math_functions.c **** int32_t absolute(int32_t in)
+  53:math_functions.c **** {
+  15               		.loc 1 53 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22 0000 97FF      		sbrs r25,7
+  23 0002 00C0      		rjmp .L2
+  24 0004 9095      		com r25
+  25 0006 8095      		com r24
+  26 0008 7095      		com r23
+  27 000a 6195      		neg r22
+  28 000c 7F4F      		sbci r23,lo8(-1)
+  29 000e 8F4F      		sbci r24,lo8(-1)
+  30 0010 9F4F      		sbci r25,lo8(-1)
+  31               	.LVL1:
+  32               	.L2:
+  54:math_functions.c ****   if( in < 0)
+  55:math_functions.c ****   {
+  56:math_functions.c ****     return -in;
+  57:math_functions.c ****   }
+  58:math_functions.c ****   else
+  59:math_functions.c ****   {
+  60:math_functions.c ****     return in;
+  61:math_functions.c ****   }
+  62:math_functions.c **** }
+  33               		.loc 1 62 0
+  34 0012 0895      		ret
+  35               		.cfi_endproc
+  36               	.LFE0:
+  38               	.global	signum
+  40               	signum:
+  41               	.LFB1:
+  63:math_functions.c **** 
+  64:math_functions.c **** //Get sign of a number
+  65:math_functions.c **** //------------------------------------------------------------------------------
+  66:math_functions.c **** int32_t signum(int32_t in)
+  67:math_functions.c **** {
+  42               		.loc 1 67 0
+  43               		.cfi_startproc
+  44               	.LVL2:
+  45               	/* prologue: function */
+  46               	/* frame size = 0 */
+  47               	/* stack size = 0 */
+  48               	.L__stack_usage = 0
+  68:math_functions.c ****   if(in < 0)
+  49               		.loc 1 68 0
+  50 0014 97FD      		sbrc r25,7
+  51 0016 00C0      		rjmp .L7
+  69:math_functions.c ****   {
+  70:math_functions.c ****     return -1;
+  52               		.loc 1 70 0
+  53 0018 21E0      		ldi r18,lo8(1)
+  54 001a 50E0      		ldi r21,0
+  55 001c 40E0      		ldi r20,0
+  56 001e 30E0      		ldi r19,0
+  57 0020 672B      		or r22,r23
+  58 0022 682B      		or r22,r24
+  59 0024 692B      		or r22,r25
+  60 0026 01F4      		brne .L6
+  61 0028 20E0      		ldi r18,0
+  62               	.L6:
+  63 002a 622F      		mov r22,r18
+  64               	.LVL3:
+  65 002c 752F      		mov r23,r21
+  66 002e 842F      		mov r24,r20
+  67 0030 932F      		mov r25,r19
+  68 0032 0895      		ret
+  69               	.LVL4:
+  70               	.L7:
+  71 0034 6FEF      		ldi r22,lo8(-1)
+  72               	.LVL5:
+  73 0036 7FEF      		ldi r23,lo8(-1)
+  74 0038 8FEF      		ldi r24,lo8(-1)
+  75 003a 9FEF      		ldi r25,lo8(-1)
+  71:math_functions.c ****   }
+  72:math_functions.c ****   else if(in == 0)
+  73:math_functions.c ****   {
+  74:math_functions.c ****     return 0;
+  75:math_functions.c ****   }
+  76:math_functions.c ****   else
+  77:math_functions.c ****   {
+  78:math_functions.c ****     return 1;
+  79:math_functions.c ****   }
+  80:math_functions.c **** }
+  76               		.loc 1 80 0
+  77 003c 0895      		ret
+  78               		.cfi_endproc
+  79               	.LFE1:
+  81               	.global	sqrt
+  83               	sqrt:
+  84               	.LFB2:
+  81:math_functions.c **** 
+  82:math_functions.c **** //Approximation of square root
+  83:math_functions.c **** //------------------------------------------------------------------------------
+  84:math_functions.c **** uint32_t sqrt(uint32_t val) 
+  85:math_functions.c **** {
+  85               		.loc 1 85 0
+  86               		.cfi_startproc
+  87               	.LVL6:
+  88 003e 4F92      		push r4
+  89               	.LCFI0:
+  90               		.cfi_def_cfa_offset 3
+  91               		.cfi_offset 4, -2
+  92 0040 5F92      		push r5
+  93               	.LCFI1:
+  94               		.cfi_def_cfa_offset 4
+  95               		.cfi_offset 5, -3
+  96 0042 6F92      		push r6
+  97               	.LCFI2:
+  98               		.cfi_def_cfa_offset 5
+  99               		.cfi_offset 6, -4
+ 100 0044 7F92      		push r7
+ 101               	.LCFI3:
+ 102               		.cfi_def_cfa_offset 6
+ 103               		.cfi_offset 7, -5
+ 104 0046 8F92      		push r8
+ 105               	.LCFI4:
+ 106               		.cfi_def_cfa_offset 7
+ 107               		.cfi_offset 8, -6
+ 108 0048 9F92      		push r9
+ 109               	.LCFI5:
+ 110               		.cfi_def_cfa_offset 8
+ 111               		.cfi_offset 9, -7
+ 112 004a AF92      		push r10
+ 113               	.LCFI6:
+ 114               		.cfi_def_cfa_offset 9
+ 115               		.cfi_offset 10, -8
+ 116 004c BF92      		push r11
+ 117               	.LCFI7:
+ 118               		.cfi_def_cfa_offset 10
+ 119               		.cfi_offset 11, -9
+ 120 004e CF92      		push r12
+ 121               	.LCFI8:
+ 122               		.cfi_def_cfa_offset 11
+ 123               		.cfi_offset 12, -10
+ 124 0050 DF92      		push r13
+ 125               	.LCFI9:
+ 126               		.cfi_def_cfa_offset 12
+ 127               		.cfi_offset 13, -11
+ 128 0052 EF92      		push r14
+ 129               	.LCFI10:
+ 130               		.cfi_def_cfa_offset 13
+ 131               		.cfi_offset 14, -12
+ 132 0054 FF92      		push r15
+ 133               	.LCFI11:
+ 134               		.cfi_def_cfa_offset 14
+ 135               		.cfi_offset 15, -13
+ 136               	/* prologue: function */
+ 137               	/* frame size = 0 */
+ 138               	/* stack size = 12 */
+ 139               	.L__stack_usage = 12
+ 140 0056 4B01      		movw r8,r22
+ 141 0058 5C01      		movw r10,r24
+ 142               	.LVL7:
+ 143               		.loc 1 85 0
+ 144 005a 2FE0      		ldi r18,lo8(15)
+ 145 005c 30E0      		ldi r19,0
+  86:math_functions.c ****     uint32_t temp;
+  87:math_functions.c ****     uint32_t g = 0;
+  88:math_functions.c ****     uint32_t b = 0x8000;
+ 146               		.loc 1 88 0
+ 147 005e C12C      		mov r12,__zero_reg__
+ 148 0060 60E8      		ldi r22,lo8(-128)
+ 149 0062 D62E      		mov r13,r22
+ 150 0064 E12C      		mov r14,__zero_reg__
+ 151 0066 F12C      		mov r15,__zero_reg__
+ 152               	.LVL8:
+  87:math_functions.c ****     uint32_t b = 0x8000;
+ 153               		.loc 1 87 0
+ 154 0068 60E0      		ldi r22,0
+ 155 006a 70E0      		ldi r23,0
+ 156 006c CB01      		movw r24,r22
+ 157               	.LVL9:
+ 158               	.L10:
+  89:math_functions.c ****     uint32_t bshft = 15;
+  90:math_functions.c ****     int32_t  i;
+  91:math_functions.c ****     
+  92:math_functions.c ****     for (i = 0; i < 16; i++) 
+  93:math_functions.c ****     {
+  94:math_functions.c ****       temp = g << 1;
+ 159               		.loc 1 94 0
+ 160 006e 2B01      		movw r4,r22
+ 161 0070 3C01      		movw r6,r24
+ 162 0072 440C      		lsl r4
+ 163 0074 551C      		rol r5
+ 164 0076 661C      		rol r6
+ 165 0078 771C      		rol r7
+ 166               	.LVL10:
+  95:math_functions.c ****       temp = temp + b;
+ 167               		.loc 1 95 0
+ 168 007a 4C0C      		add r4,r12
+ 169 007c 5D1C      		adc r5,r13
+ 170 007e 6E1C      		adc r6,r14
+ 171 0080 7F1C      		adc r7,r15
+ 172               	.LVL11:
+  96:math_functions.c ****       temp = temp << bshft;
+ 173               		.loc 1 96 0
+ 174 0082 022E      		mov r0,r18
+ 175 0084 00C0      		rjmp 2f
+ 176               		1:
+ 177 0086 440C      		lsl r4
+ 178 0088 551C      		rol r5
+ 179 008a 661C      		rol r6
+ 180 008c 771C      		rol r7
+ 181               		2:
+ 182 008e 0A94      		dec r0
+ 183 0090 02F4      		brpl 1b
+ 184               	.LVL12:
+  97:math_functions.c ****       if ( val >= temp)
+ 185               		.loc 1 97 0
+ 186 0092 8414      		cp r8,r4
+ 187 0094 9504      		cpc r9,r5
+ 188 0096 A604      		cpc r10,r6
+ 189 0098 B704      		cpc r11,r7
+ 190 009a 00F0      		brlo .L9
+  98:math_functions.c ****       {
+  99:math_functions.c ****         g += b;
+ 191               		.loc 1 99 0
+ 192 009c 6C0D      		add r22,r12
+ 193 009e 7D1D      		adc r23,r13
+ 194 00a0 8E1D      		adc r24,r14
+ 195 00a2 9F1D      		adc r25,r15
+ 196               	.LVL13:
+ 100:math_functions.c ****         val -= temp;
+ 197               		.loc 1 100 0
+ 198 00a4 8418      		sub r8,r4
+ 199 00a6 9508      		sbc r9,r5
+ 200 00a8 A608      		sbc r10,r6
+ 201 00aa B708      		sbc r11,r7
+ 202               	.LVL14:
+ 203               	.L9:
+ 101:math_functions.c ****       }
+ 102:math_functions.c ****       bshft--;
+ 103:math_functions.c ****       b = b >> 1;
+ 204               		.loc 1 103 0 discriminator 2
+ 205 00ac F694      		lsr r15
+ 206 00ae E794      		ror r14
+ 207 00b0 D794      		ror r13
+ 208 00b2 C794      		ror r12
+ 209               	.LVL15:
+ 210 00b4 2150      		subi r18,1
+ 211 00b6 3109      		sbc r19,__zero_reg__
+ 212 00b8 00F4      		brcc .L10
+ 213               	/* epilogue start */
+ 104:math_functions.c ****     }
+ 105:math_functions.c ****     
+ 106:math_functions.c ****     return g;
+ 107:math_functions.c **** }
+ 214               		.loc 1 107 0
+ 215 00ba FF90      		pop r15
+ 216 00bc EF90      		pop r14
+ 217 00be DF90      		pop r13
+ 218 00c0 CF90      		pop r12
+ 219               	.LVL16:
+ 220 00c2 BF90      		pop r11
+ 221 00c4 AF90      		pop r10
+ 222 00c6 9F90      		pop r9
+ 223 00c8 8F90      		pop r8
+ 224               	.LVL17:
+ 225 00ca 7F90      		pop r7
+ 226 00cc 6F90      		pop r6
+ 227 00ce 5F90      		pop r5
+ 228 00d0 4F90      		pop r4
+ 229               	.LVL18:
+ 230 00d2 0895      		ret
+ 231               		.cfi_endproc
+ 232               	.LFE2:
+ 234               	.global	swap
+ 236               	swap:
+ 237               	.LFB3:
+ 108:math_functions.c **** 
+ 109:math_functions.c **** //Swap to numbers
+ 110:math_functions.c **** //------------------------------------------------------------------------------
+ 111:math_functions.c **** void swap(uint8_t *x, uint8_t *y) 
+ 112:math_functions.c **** {
+ 238               		.loc 1 112 0
+ 239               		.cfi_startproc
+ 240               	.LVL19:
+ 241               	/* prologue: function */
+ 242               	/* frame size = 0 */
+ 243               	/* stack size = 0 */
+ 244               	.L__stack_usage = 0
+ 113:math_functions.c **** 	uint8_t t = *x; *x = *y; *y = t;
+ 245               		.loc 1 113 0
+ 246 00d4 FC01      		movw r30,r24
+ 247 00d6 2081      		ld r18,Z
+ 248               	.LVL20:
+ 249 00d8 FB01      		movw r30,r22
+ 250 00da 3081      		ld r19,Z
+ 251 00dc FC01      		movw r30,r24
+ 252 00de 3083      		st Z,r19
+ 253 00e0 FB01      		movw r30,r22
+ 254 00e2 2083      		st Z,r18
+ 255 00e4 0895      		ret
+ 256               		.cfi_endproc
+ 257               	.LFE3:
+ 259               	.global	reverse
+ 261               	reverse:
+ 262               	.LFB4:
+ 114:math_functions.c **** }
+ 115:math_functions.c **** 
+ 116:math_functions.c **** //Reverse a buffer
+ 117:math_functions.c **** //------------------------------------------------------------------------------
+ 118:math_functions.c **** uint8_t* reverse(uint8_t *buffer, int8_t i, int8_t j)
+ 119:math_functions.c **** {
+ 263               		.loc 1 119 0
+ 264               		.cfi_startproc
+ 265               	.LVL21:
+ 266               	/* prologue: function */
+ 267               	/* frame size = 0 */
+ 268               	/* stack size = 0 */
+ 269               	.L__stack_usage = 0
+ 270 00e6 460F      		add r20,r22
+ 271               	.LVL22:
+ 272               	.L14:
+ 273 00e8 242F      		mov r18,r20
+ 274 00ea 261B      		sub r18,r22
+ 275               	.LVL23:
+ 120:math_functions.c **** 	while (i < j)
+ 276               		.loc 1 120 0
+ 277 00ec 6217      		cp r22,r18
+ 278 00ee 04F4      		brge .L16
+ 279               	.LVL24:
+ 121:math_functions.c **** 		swap(&buffer[i++], &buffer[j--]);
+ 280               		.loc 1 121 0
+ 281 00f0 FC01      		movw r30,r24
+ 282 00f2 E20F      		add r30,r18
+ 283 00f4 F11D      		adc r31,__zero_reg__
+ 284 00f6 27FD      		sbrc r18,7
+ 285 00f8 FA95      		dec r31
+ 286               	.LVL25:
+ 287 00fa DC01      		movw r26,r24
+ 288 00fc A60F      		add r26,r22
+ 289 00fe B11D      		adc r27,__zero_reg__
+ 290 0100 67FD      		sbrc r22,7
+ 291 0102 BA95      		dec r27
+ 292               	.LVL26:
+ 293               	.LBB7:
+ 294               	.LBB8:
+ 113:math_functions.c **** }
+ 295               		.loc 1 113 0
+ 296 0104 2C91      		ld r18,X
+ 297               	.LVL27:
+ 298 0106 3081      		ld r19,Z
+ 299 0108 3C93      		st X,r19
+ 300 010a 2083      		st Z,r18
+ 301               	.LBE8:
+ 302               	.LBE7:
+ 303               		.loc 1 121 0
+ 304 010c 6F5F      		subi r22,lo8(-(1))
+ 305               	.LVL28:
+ 306 010e 00C0      		rjmp .L14
+ 307               	.LVL29:
+ 308               	.L16:
+ 309               	/* epilogue start */
+ 122:math_functions.c **** 
+ 123:math_functions.c **** 	return buffer;
+ 124:math_functions.c **** }
+ 310               		.loc 1 124 0
+ 311 0110 0895      		ret
+ 312               		.cfi_endproc
+ 313               	.LFE4:
+ 315               	.global	itoa
+ 317               	itoa:
+ 318               	.LFB5:
+ 125:math_functions.c **** 
+ 126:math_functions.c **** //Iterative itoa implementation
+ 127:math_functions.c **** //------------------------------------------------------------------------------
+ 128:math_functions.c **** uint8_t* itoa(int32_t value, uint8_t* buffer, int8_t base)
+ 129:math_functions.c **** {
+ 319               		.loc 1 129 0
+ 320               		.cfi_startproc
+ 321               	.LVL30:
+ 322 0112 2F92      		push r2
+ 323               	.LCFI12:
+ 324               		.cfi_def_cfa_offset 3
+ 325               		.cfi_offset 2, -2
+ 326 0114 3F92      		push r3
+ 327               	.LCFI13:
+ 328               		.cfi_def_cfa_offset 4
+ 329               		.cfi_offset 3, -3
+ 330 0116 4F92      		push r4
+ 331               	.LCFI14:
+ 332               		.cfi_def_cfa_offset 5
+ 333               		.cfi_offset 4, -4
+ 334 0118 5F92      		push r5
+ 335               	.LCFI15:
+ 336               		.cfi_def_cfa_offset 6
+ 337               		.cfi_offset 5, -5
+ 338 011a 6F92      		push r6
+ 339               	.LCFI16:
+ 340               		.cfi_def_cfa_offset 7
+ 341               		.cfi_offset 6, -6
+ 342 011c 7F92      		push r7
+ 343               	.LCFI17:
+ 344               		.cfi_def_cfa_offset 8
+ 345               		.cfi_offset 7, -7
+ 346 011e 8F92      		push r8
+ 347               	.LCFI18:
+ 348               		.cfi_def_cfa_offset 9
+ 349               		.cfi_offset 8, -8
+ 350 0120 9F92      		push r9
+ 351               	.LCFI19:
+ 352               		.cfi_def_cfa_offset 10
+ 353               		.cfi_offset 9, -9
+ 354 0122 AF92      		push r10
+ 355               	.LCFI20:
+ 356               		.cfi_def_cfa_offset 11
+ 357               		.cfi_offset 10, -10
+ 358 0124 BF92      		push r11
+ 359               	.LCFI21:
+ 360               		.cfi_def_cfa_offset 12
+ 361               		.cfi_offset 11, -11
+ 362 0126 CF92      		push r12
+ 363               	.LCFI22:
+ 364               		.cfi_def_cfa_offset 13
+ 365               		.cfi_offset 12, -12
+ 366 0128 DF92      		push r13
+ 367               	.LCFI23:
+ 368               		.cfi_def_cfa_offset 14
+ 369               		.cfi_offset 13, -13
+ 370 012a EF92      		push r14
+ 371               	.LCFI24:
+ 372               		.cfi_def_cfa_offset 15
+ 373               		.cfi_offset 14, -14
+ 374 012c FF92      		push r15
+ 375               	.LCFI25:
+ 376               		.cfi_def_cfa_offset 16
+ 377               		.cfi_offset 15, -15
+ 378 012e 0F93      		push r16
+ 379               	.LCFI26:
+ 380               		.cfi_def_cfa_offset 17
+ 381               		.cfi_offset 16, -16
+ 382 0130 1F93      		push r17
+ 383               	.LCFI27:
+ 384               		.cfi_def_cfa_offset 18
+ 385               		.cfi_offset 17, -17
+ 386 0132 CF93      		push r28
+ 387               	.LCFI28:
+ 388               		.cfi_def_cfa_offset 19
+ 389               		.cfi_offset 28, -18
+ 390 0134 DF93      		push r29
+ 391               	.LCFI29:
+ 392               		.cfi_def_cfa_offset 20
+ 393               		.cfi_offset 29, -19
+ 394 0136 00D0      		rcall .
+ 395 0138 1F92      		push __zero_reg__
+ 396               	.LCFI30:
+ 397               		.cfi_def_cfa_offset 23
+ 398 013a CDB7      		in r28,__SP_L__
+ 399 013c DEB7      		in r29,__SP_H__
+ 400               	.LCFI31:
+ 401               		.cfi_def_cfa_register 28
+ 402               	/* prologue: function */
+ 403               	/* frame size = 3 */
+ 404               	/* stack size = 21 */
+ 405               	.L__stack_usage = 21
+ 406 013e 4B01      		movw r8,r22
+ 407 0140 5C01      		movw r10,r24
+ 408 0142 5B83      		std Y+3,r21
+ 409 0144 4A83      		std Y+2,r20
+ 410 0146 2983      		std Y+1,r18
+ 130:math_functions.c **** 	// invalid input
+ 131:math_functions.c **** 	if (base < 2 || base > 32)
+ 411               		.loc 1 131 0
+ 412 0148 822F      		mov r24,r18
+ 413 014a 8250      		subi r24,lo8(-(-2))
+ 414 014c 8F31      		cpi r24,lo8(31)
+ 415 014e 00F0      		brlo .+2
+ 416 0150 00C0      		rjmp .L18
+ 417               	.LVL31:
+ 418 0152 7501      		movw r14,r10
+ 419 0154 6401      		movw r12,r8
+ 420 0156 B7FE      		sbrs r11,7
+ 421 0158 00C0      		rjmp .L19
+ 422 015a CC24      		clr r12
+ 423 015c DD24      		clr r13
+ 424 015e 7601      		movw r14,r12
+ 425 0160 C818      		sub r12,r8
+ 426 0162 D908      		sbc r13,r9
+ 427 0164 EA08      		sbc r14,r10
+ 428 0166 FB08      		sbc r15,r11
+ 429               	.L19:
+ 430 0168 0A81      		ldd r16,Y+2
+ 431 016a 1B81      		ldd r17,Y+3
+ 432 016c 2224      		clr r2
+ 433 016e 2394      		inc r2
+ 434 0170 312C      		mov r3,__zero_reg__
+ 435               	.LBB9:
+ 132:math_functions.c **** 		return buffer;
+ 133:math_functions.c **** 
+ 134:math_functions.c **** 	// consider absolute value of number
+ 135:math_functions.c **** 	int32_t n = absolute(value);
+ 136:math_functions.c **** 
+ 137:math_functions.c **** 	int16_t i = 0;
+ 138:math_functions.c **** 	while (n)
+ 139:math_functions.c **** 	{
+ 140:math_functions.c **** 		int32_t r = n % base;
+ 436               		.loc 1 140 0
+ 437 0172 8981      		ldd r24,Y+1
+ 438 0174 482E      		mov r4,r24
+ 439 0176 880F      		lsl r24
+ 440 0178 5508      		sbc r5,r5
+ 441 017a 6608      		sbc r6,r6
+ 442 017c 7708      		sbc r7,r7
+ 443               	.LVL32:
+ 444               	.L20:
+ 445 017e A101      		movw r20,r2
+ 446 0180 4150      		subi r20,1
+ 447 0182 5109      		sbc r21,__zero_reg__
+ 448               	.LVL33:
+ 449               	.LBE9:
+ 138:math_functions.c **** 	{
+ 450               		.loc 1 138 0
+ 451 0184 C114      		cp r12,__zero_reg__
+ 452 0186 D104      		cpc r13,__zero_reg__
+ 453 0188 E104      		cpc r14,__zero_reg__
+ 454 018a F104      		cpc r15,__zero_reg__
+ 455 018c 01F0      		breq .L27
+ 456               	.LBB10:
+ 457               		.loc 1 140 0
+ 458 018e C701      		movw r24,r14
+ 459 0190 B601      		movw r22,r12
+ 460 0192 A301      		movw r20,r6
+ 461 0194 9201      		movw r18,r4
+ 462 0196 00D0      		rcall __divmodsi4
+ 463               	.LVL34:
+ 141:math_functions.c **** 
+ 142:math_functions.c **** 		if (r >= 10) 
+ 464               		.loc 1 142 0
+ 465 0198 6A30      		cpi r22,10
+ 466 019a 7105      		cpc r23,__zero_reg__
+ 467 019c 8105      		cpc r24,__zero_reg__
+ 468 019e 9105      		cpc r25,__zero_reg__
+ 469 01a0 04F0      		brlt .L21
+ 470               	.LVL35:
+ 143:math_functions.c **** 			buffer[i++] = 65 + (r - 10);
+ 471               		.loc 1 143 0
+ 472 01a2 695C      		subi r22,lo8(-(55))
+ 473               	.LVL36:
+ 474 01a4 00C0      		rjmp .L26
+ 475               	.LVL37:
+ 476               	.L21:
+ 144:math_functions.c **** 		else
+ 145:math_functions.c **** 			buffer[i++] = 48 + r;
+ 477               		.loc 1 145 0
+ 478 01a6 605D      		subi r22,lo8(-(48))
+ 479               	.LVL38:
+ 480               	.L26:
+ 481 01a8 F801      		movw r30,r16
+ 482 01aa 6083      		st Z,r22
+ 483               	.LVL39:
+ 146:math_functions.c **** 
+ 147:math_functions.c **** 		n = n / base;
+ 484               		.loc 1 147 0
+ 485 01ac C701      		movw r24,r14
+ 486 01ae B601      		movw r22,r12
+ 487 01b0 A301      		movw r20,r6
+ 488 01b2 9201      		movw r18,r4
+ 489 01b4 00D0      		rcall __divmodsi4
+ 490 01b6 6901      		movw r12,r18
+ 491 01b8 7A01      		movw r14,r20
+ 492               	.LVL40:
+ 493 01ba FFEF      		ldi r31,-1
+ 494 01bc 2F1A      		sub r2,r31
+ 495 01be 3F0A      		sbc r3,r31
+ 496 01c0 0F5F      		subi r16,-1
+ 497 01c2 1F4F      		sbci r17,-1
+ 498 01c4 00C0      		rjmp .L20
+ 499               	.LVL41:
+ 500               	.L27:
+ 501               	.LBE10:
+ 148:math_functions.c **** 	}
+ 149:math_functions.c **** 
+ 150:math_functions.c **** 	// if number is 0
+ 151:math_functions.c **** 	if (i == 0)
+ 502               		.loc 1 151 0
+ 503 01c6 4115      		cp r20,__zero_reg__
+ 504 01c8 5105      		cpc r21,__zero_reg__
+ 505 01ca 01F4      		brne .L24
+ 506               	.LVL42:
+ 152:math_functions.c **** 		buffer[i++] = '0';
+ 507               		.loc 1 152 0
+ 508 01cc 80E3      		ldi r24,lo8(48)
+ 509 01ce EA81      		ldd r30,Y+2
+ 510 01d0 FB81      		ldd r31,Y+3
+ 511 01d2 8083      		st Z,r24
+ 512 01d4 41E0      		ldi r20,lo8(1)
+ 513 01d6 50E0      		ldi r21,0
+ 514               	.LVL43:
+ 515               	.L24:
+ 153:math_functions.c **** 
+ 154:math_functions.c **** 	// If base is 10 and value is negative, the resulting string 
+ 155:math_functions.c **** 	// is preceded with a minus sign (-)
+ 156:math_functions.c **** 	// With any other base, value is always considered unsigned
+ 157:math_functions.c **** 	if (value < 0 && base == 10)
+ 516               		.loc 1 157 0
+ 517 01d8 B7FE      		sbrs r11,7
+ 518 01da 00C0      		rjmp .L25
+ 519               		.loc 1 157 0 is_stmt 0 discriminator 1
+ 520 01dc F981      		ldd r31,Y+1
+ 521 01de FA30      		cpi r31,lo8(10)
+ 522 01e0 01F4      		brne .L25
+ 523               	.LVL44:
+ 158:math_functions.c **** 		buffer[i++] = '-';
+ 524               		.loc 1 158 0 is_stmt 1
+ 525 01e2 EA81      		ldd r30,Y+2
+ 526 01e4 FB81      		ldd r31,Y+3
+ 527 01e6 E40F      		add r30,r20
+ 528 01e8 F51F      		adc r31,r21
+ 529 01ea 8DE2      		ldi r24,lo8(45)
+ 530 01ec 8083      		st Z,r24
+ 531 01ee 4F5F      		subi r20,-1
+ 532 01f0 5F4F      		sbci r21,-1
+ 533               	.LVL45:
+ 534               	.L25:
+ 159:math_functions.c **** 
+ 160:math_functions.c **** 	buffer[i] = '\0'; // null terminate string
+ 535               		.loc 1 160 0
+ 536 01f2 EA81      		ldd r30,Y+2
+ 537 01f4 FB81      		ldd r31,Y+3
+ 538 01f6 E40F      		add r30,r20
+ 539 01f8 F51F      		adc r31,r21
+ 540 01fa 1082      		st Z,__zero_reg__
+ 161:math_functions.c **** 
+ 162:math_functions.c **** 	// reverse the string and return it
+ 163:math_functions.c **** 	return reverse(buffer, 0, i - 1);
+ 541               		.loc 1 163 0
+ 542 01fc 4150      		subi r20,lo8(-(-1))
+ 543 01fe 60E0      		ldi r22,0
+ 544 0200 8A81      		ldd r24,Y+2
+ 545 0202 9B81      		ldd r25,Y+3
+ 546               	/* epilogue start */
+ 164:math_functions.c **** }
+ 547               		.loc 1 164 0
+ 548 0204 0F90      		pop __tmp_reg__
+ 549 0206 0F90      		pop __tmp_reg__
+ 550 0208 0F90      		pop __tmp_reg__
+ 551 020a DF91      		pop r29
+ 552 020c CF91      		pop r28
+ 553 020e 1F91      		pop r17
+ 554 0210 0F91      		pop r16
+ 555 0212 FF90      		pop r15
+ 556 0214 EF90      		pop r14
+ 557 0216 DF90      		pop r13
+ 558 0218 CF90      		pop r12
+ 559               	.LVL46:
+ 560 021a BF90      		pop r11
+ 561 021c AF90      		pop r10
+ 562 021e 9F90      		pop r9
+ 563 0220 8F90      		pop r8
+ 564               	.LVL47:
+ 565 0222 7F90      		pop r7
+ 566 0224 6F90      		pop r6
+ 567 0226 5F90      		pop r5
+ 568 0228 4F90      		pop r4
+ 569 022a 3F90      		pop r3
+ 570 022c 2F90      		pop r2
+ 163:math_functions.c **** }
+ 571               		.loc 1 163 0
+ 572 022e 00C0      		rjmp reverse
+ 573               	.LVL48:
+ 574               	.L18:
+ 575               		.loc 1 164 0
+ 576 0230 8A81      		ldd r24,Y+2
+ 577 0232 9B81      		ldd r25,Y+3
+ 578               	/* epilogue start */
+ 579 0234 0F90      		pop __tmp_reg__
+ 580 0236 0F90      		pop __tmp_reg__
+ 581 0238 0F90      		pop __tmp_reg__
+ 582 023a DF91      		pop r29
+ 583 023c CF91      		pop r28
+ 584 023e 1F91      		pop r17
+ 585 0240 0F91      		pop r16
+ 586 0242 FF90      		pop r15
+ 587 0244 EF90      		pop r14
+ 588 0246 DF90      		pop r13
+ 589 0248 CF90      		pop r12
+ 590 024a BF90      		pop r11
+ 591 024c AF90      		pop r10
+ 592 024e 9F90      		pop r9
+ 593 0250 8F90      		pop r8
+ 594               	.LVL49:
+ 595 0252 7F90      		pop r7
+ 596 0254 6F90      		pop r6
+ 597 0256 5F90      		pop r5
+ 598 0258 4F90      		pop r4
+ 599 025a 3F90      		pop r3
+ 600 025c 2F90      		pop r2
+ 601 025e 0895      		ret
+ 602               		.cfi_endproc
+ 603               	.LFE5:
+ 605               	.global	char_to_hex
+ 607               	char_to_hex:
+ 608               	.LFB6:
+ 165:math_functions.c **** 
+ 166:math_functions.c **** //Simple char to hex_string[2] conversion
+ 167:math_functions.c **** //------------------------------------------------------------------------------
+ 168:math_functions.c **** void char_to_hex(uint8_t input, uint8_t *outbuf)
+ 169:math_functions.c **** {
+ 609               		.loc 1 169 0
+ 610               		.cfi_startproc
+ 611               	.LVL50:
+ 612               	/* prologue: function */
+ 613               	/* frame size = 0 */
+ 614               	/* stack size = 0 */
+ 615               	.L__stack_usage = 0
+ 170:math_functions.c ****   #define TO_HEX(i) (i <= 9 ? '0' + i : 'A' - 10 + i)
+ 171:math_functions.c **** 
+ 172:math_functions.c ****   outbuf[0] = TO_HEX(((input & 0x00F0) >> 4));
+ 616               		.loc 1 172 0
+ 617 0260 982F      		mov r25,r24
+ 618 0262 9295      		swap r25
+ 619 0264 9F70      		andi r25,lo8(15)
+ 620 0266 9A30      		cpi r25,lo8(10)
+ 621 0268 00F4      		brsh .L29
+ 622               		.loc 1 172 0 is_stmt 0 discriminator 1
+ 623 026a 905D      		subi r25,lo8(-(48))
+ 624 026c 00C0      		rjmp .L30
+ 625               	.L29:
+ 626               		.loc 1 172 0 discriminator 2
+ 627 026e 995C      		subi r25,lo8(-(55))
+ 628               	.L30:
+ 629               		.loc 1 172 0 discriminator 4
+ 630 0270 FB01      		movw r30,r22
+ 631 0272 9083      		st Z,r25
+ 632 0274 8F70      		andi r24,lo8(15)
+ 633               	.LVL51:
+ 173:math_functions.c ****   outbuf[1] = TO_HEX((input & 0x000F));
+ 634               		.loc 1 173 0 is_stmt 1 discriminator 4
+ 635 0276 8A30      		cpi r24,lo8(10)
+ 636 0278 00F4      		brsh .L31
+ 637               		.loc 1 173 0 is_stmt 0 discriminator 1
+ 638 027a 805D      		subi r24,lo8(-(48))
+ 639 027c 00C0      		rjmp .L32
+ 640               	.L31:
+ 641               		.loc 1 173 0 discriminator 2
+ 642 027e 895C      		subi r24,lo8(-(55))
+ 643               	.L32:
+ 644               		.loc 1 173 0 discriminator 4
+ 645 0280 FB01      		movw r30,r22
+ 646 0282 8183      		std Z+1,r24
+ 647 0284 0895      		ret
+ 648               		.cfi_endproc
+ 649               	.LFE6:
+ 651               	.global	bits_to_bytes
+ 653               	bits_to_bytes:
+ 654               	.LFB7:
+ 174:math_functions.c **** }
+ 175:math_functions.c **** 
+ 176:math_functions.c **** //Convert a byte to a 0xFF/0x00 byte array for one wire communication
+ 177:math_functions.c **** //------------------------------------------------------------------------------
+ 178:math_functions.c **** void bits_to_bytes(uint8_t input, uint8_t* outbuf)
+ 179:math_functions.c **** {
+ 655               		.loc 1 179 0 is_stmt 1
+ 656               		.cfi_startproc
+ 657               	.LVL52:
+ 658 0286 CF93      		push r28
+ 659               	.LCFI32:
+ 660               		.cfi_def_cfa_offset 3
+ 661               		.cfi_offset 28, -2
+ 662 0288 DF93      		push r29
+ 663               	.LCFI33:
+ 664               		.cfi_def_cfa_offset 4
+ 665               		.cfi_offset 29, -3
+ 666               	/* prologue: function */
+ 667               	/* frame size = 0 */
+ 668               	/* stack size = 2 */
+ 669               	.L__stack_usage = 2
+ 670               	.LVL53:
+ 671               		.loc 1 179 0
+ 672 028a 20E0      		ldi r18,0
+ 673 028c 30E0      		ldi r19,0
+ 674               	.LBB11:
+ 180:math_functions.c ****   uint8_t mask = 0x01;
+ 181:math_functions.c **** 
+ 182:math_functions.c ****   for(uint8_t i = 0; i < 8; ++i)
+ 183:math_functions.c ****   {
+ 184:math_functions.c ****     if (input & (mask << i))
+ 675               		.loc 1 184 0
+ 676 028e E1E0      		ldi r30,lo8(1)
+ 677 0290 F0E0      		ldi r31,0
+ 678 0292 90E0      		ldi r25,0
+ 185:math_functions.c ****     {
+ 186:math_functions.c ****       outbuf[i] = 0xFF;
+ 679               		.loc 1 186 0
+ 680 0294 AFEF      		ldi r26,lo8(-1)
+ 681               	.LVL54:
+ 682               	.L36:
+ 184:math_functions.c ****     {
+ 683               		.loc 1 184 0
+ 684 0296 AF01      		movw r20,r30
+ 685 0298 022E      		mov r0,r18
+ 686 029a 00C0      		rjmp 2f
+ 687               		1:
+ 688 029c 440F      		lsl r20
+ 689 029e 551F      		rol r21
+ 690               		2:
+ 691 02a0 0A94      		dec r0
+ 692 02a2 02F4      		brpl 1b
+ 693 02a4 4823      		and r20,r24
+ 694 02a6 5923      		and r21,r25
+ 695               		.loc 1 186 0
+ 696 02a8 EB01      		movw r28,r22
+ 184:math_functions.c ****     {
+ 697               		.loc 1 184 0
+ 698 02aa 452B      		or r20,r21
+ 699 02ac 01F0      		breq .L34
+ 700               		.loc 1 186 0
+ 701 02ae A883      		st Y,r26
+ 702 02b0 00C0      		rjmp .L35
+ 703               	.L34:
+ 187:math_functions.c ****     }
+ 188:math_functions.c ****     else
+ 189:math_functions.c ****     {
+ 190:math_functions.c ****       outbuf[i] = 0x00;
+ 704               		.loc 1 190 0
+ 705 02b2 1882      		st Y,__zero_reg__
+ 706               	.L35:
+ 707               	.LVL55:
+ 708 02b4 2F5F      		subi r18,-1
+ 709 02b6 3F4F      		sbci r19,-1
+ 710               	.LVL56:
+ 711 02b8 6F5F      		subi r22,-1
+ 712 02ba 7F4F      		sbci r23,-1
+ 182:math_functions.c ****   {
+ 713               		.loc 1 182 0 discriminator 2
+ 714 02bc 2830      		cpi r18,8
+ 715 02be 3105      		cpc r19,__zero_reg__
+ 716 02c0 01F4      		brne .L36
+ 717               	/* epilogue start */
+ 718               	.LBE11:
+ 191:math_functions.c ****     }    
+ 192:math_functions.c ****   }
+ 193:math_functions.c **** }
+ 719               		.loc 1 193 0
+ 720 02c2 DF91      		pop r29
+ 721 02c4 CF91      		pop r28
+ 722 02c6 0895      		ret
+ 723               		.cfi_endproc
+ 724               	.LFE7:
+ 726               	.global	bytes_to_bits
+ 728               	bytes_to_bits:
+ 729               	.LFB8:
+ 194:math_functions.c **** 
+ 195:math_functions.c **** //Convert a byte array of hex values to one byte for one wire communication
+ 196:math_functions.c **** //------------------------------------------------------------------------------
+ 197:math_functions.c **** uint8_t bytes_to_bits(uint8_t* inbuf, uint8_t threshold)
+ 198:math_functions.c **** {
+ 730               		.loc 1 198 0
+ 731               		.cfi_startproc
+ 732               	.LVL57:
+ 733               	/* prologue: function */
+ 734               	/* frame size = 0 */
+ 735               	/* stack size = 0 */
+ 736               	.L__stack_usage = 0
+ 737 02c8 FC01      		movw r30,r24
+ 738               		.loc 1 198 0
+ 739 02ca 20E0      		ldi r18,0
+ 740 02cc 30E0      		ldi r19,0
+ 199:math_functions.c ****   uint8_t out = 0x00;
+ 741               		.loc 1 199 0
+ 742 02ce 80E0      		ldi r24,0
+ 743               	.LVL58:
+ 744               	.LBB12:
+ 200:math_functions.c ****   uint8_t mask = 0x01;
+ 201:math_functions.c **** 
+ 202:math_functions.c ****   for (uint8_t i = 0; i < 8; ++i)
+ 203:math_functions.c ****   {
+ 204:math_functions.c ****     if (inbuf[i] > threshold)
+ 205:math_functions.c ****     {
+ 206:math_functions.c ****       out = out | (mask << i);
+ 745               		.loc 1 206 0
+ 746 02d0 41E0      		ldi r20,lo8(1)
+ 747 02d2 50E0      		ldi r21,0
+ 748               	.LVL59:
+ 749               	.L40:
+ 204:math_functions.c ****     {
+ 750               		.loc 1 204 0
+ 751 02d4 9191      		ld r25,Z+
+ 752 02d6 6917      		cp r22,r25
+ 753 02d8 00F4      		brsh .L39
+ 754               		.loc 1 206 0
+ 755 02da DA01      		movw r26,r20
+ 756 02dc 022E      		mov r0,r18
+ 757 02de 00C0      		rjmp 2f
+ 758               		1:
+ 759 02e0 AA0F      		lsl r26
+ 760               		2:
+ 761 02e2 0A94      		dec r0
+ 762 02e4 02F4      		brpl 1b
+ 763 02e6 8A2B      		or r24,r26
+ 764               	.LVL60:
+ 765               	.L39:
+ 766 02e8 2F5F      		subi r18,-1
+ 767 02ea 3F4F      		sbci r19,-1
+ 768               	.LVL61:
+ 202:math_functions.c ****   {
+ 769               		.loc 1 202 0 discriminator 2
+ 770 02ec 2830      		cpi r18,8
+ 771 02ee 3105      		cpc r19,__zero_reg__
+ 772 02f0 01F4      		brne .L40
+ 773               	/* epilogue start */
+ 774               	.LBE12:
+ 207:math_functions.c ****     }
+ 208:math_functions.c ****   }
+ 209:math_functions.c **** 
+ 210:math_functions.c ****   return out;
+ 211:math_functions.c **** }
+ 775               		.loc 1 211 0
+ 776 02f2 0895      		ret
+ 777               		.cfi_endproc
+ 778               	.LFE8:
+ 780               	.global	PI
+ 781               		.section	.rodata
+ 784               	PI:
+ 785 0000 DB        		.byte	-37
+ 786 0001 0F        		.byte	15
+ 787 0002 49        		.byte	73
+ 788 0003 40        		.byte	64
+ 789               		.text
+ 790               	.Letext0:
+ 791               		.file 2 "c:\\winavr-20100110\\avr\\include\\stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 math_functions.c
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:2      *ABS*:0000003e __SP_H__
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:3      *ABS*:0000003d __SP_L__
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:4      *ABS*:0000003f __SREG__
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:5      *ABS*:00000000 __tmp_reg__
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:6      *ABS*:00000001 __zero_reg__
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:12     .text:00000000 absolute
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:40     .text:00000014 signum
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:83     .text:0000003e sqrt
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:236    .text:000000d4 swap
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:261    .text:000000e6 reverse
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:317    .text:00000112 itoa
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:607    .text:00000260 char_to_hex
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:653    .text:00000286 bits_to_bytes
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:728    .text:000002c8 bytes_to_bits
+C:\Users\mcmai\AppData\Local\Temp\ccUhBOYU.s:784    .rodata:00000000 PI
+
+UNDEFINED SYMBOLS
+__divmodsi4
+__do_copy_data

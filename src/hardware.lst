@@ -1,0 +1,143 @@
+   1               		.file	"hardware.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	hardware_init
+  12               	hardware_init:
+  13               	.LFB6:
+  14               		.file 1 "hardware.c"
+   1:hardware.c    **** /*
+   2:hardware.c    **** 	Copyright (c) 2022 by Martin Maier (martin@mcmaier.net)
+   3:hardware.c    **** 	
+   4:hardware.c    ****     Permission is hereby granted, free of charge, to any person 
+   5:hardware.c    ****     obtaining a copy of this software and associated documentation 
+   6:hardware.c    ****     files (the "Software"), to deal in the Software without 
+   7:hardware.c    ****     restriction, including without limitation the rights to use, copy, 
+   8:hardware.c    ****     modify, merge, publish, distribute, sublicense, and/or sell copies 
+   9:hardware.c    ****     of the Software, and to permit persons to whom the Software is 
+  10:hardware.c    ****     furnished to do so, subject to the following conditions:
+  11:hardware.c    **** 
+  12:hardware.c    ****     The above copyright notice and this permission notice shall be 
+  13:hardware.c    ****     included in all copies or substantial portions of the Software.
+  14:hardware.c    **** 
+  15:hardware.c    ****     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+  16:hardware.c    ****     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+  17:hardware.c    ****     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+  18:hardware.c    ****     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+  19:hardware.c    ****     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+  20:hardware.c    ****     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+  21:hardware.c    ****     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+  22:hardware.c    ****     DEALINGS IN THE SOFTWARE.    
+  23:hardware.c    **** */
+  24:hardware.c    **** 
+  25:hardware.c    **** #ifndef HARDWARE_C_
+  26:hardware.c    **** #define HARDWARE_C_
+  27:hardware.c    **** 
+  28:hardware.c    **** #include <avr/io.h>
+  29:hardware.c    **** #include <avr/interrupt.h>
+  30:hardware.c    **** #include <util/delay.h>
+  31:hardware.c    **** 
+  32:hardware.c    **** #include "hardware.h"
+  33:hardware.c    **** #include "uart.h"
+  34:hardware.c    **** #include "wl_module.h"
+  35:hardware.c    **** 
+  36:hardware.c    **** void hardware_init(void)
+  37:hardware.c    **** {
+  15               		.loc 1 37 0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+  38:hardware.c    **** 	//Set pullup
+  39:hardware.c    **** 	PORTD |= (1 << PD2);
+  21               		.loc 1 39 0
+  22 0000 5A9A      		sbi 0xb,2
+  40:hardware.c    **** 
+  41:hardware.c    **** 	//Configure pins as output
+  42:hardware.c    **** 	DDRB |= ((1 << PB0)|(1 << PB2)|(1 << PB3)|(1 << PB5));
+  23               		.loc 1 42 0
+  24 0002 84B1      		in r24,0x4
+  25 0004 8D62      		ori r24,lo8(45)
+  26 0006 84B9      		out 0x4,r24
+  43:hardware.c    **** 	DDRD |= (1 << PD1);
+  27               		.loc 1 43 0
+  28 0008 519A      		sbi 0xa,1
+  44:hardware.c    **** 	
+  45:hardware.c    **** 	LED1_DDR |= (1 << LED1_PIN);
+  29               		.loc 1 45 0
+  30 000a 389A      		sbi 0x7,0
+  46:hardware.c    **** 	LED2_DDR |= (1 << LED2_PIN);	
+  31               		.loc 1 46 0
+  32 000c 399A      		sbi 0x7,1
+  47:hardware.c    **** 	
+  48:hardware.c    **** 	//10 ms Timer
+  49:hardware.c    **** 	
+  50:hardware.c    **** 	OCR1A =	96;
+  33               		.loc 1 50 0
+  34 000e 80E6      		ldi r24,lo8(96)
+  35 0010 90E0      		ldi r25,0
+  36 0012 9093 8900 		sts 136+1,r25
+  37 0016 8093 8800 		sts 136,r24
+  51:hardware.c    **** 
+  52:hardware.c    **** 	TCCR1B = (1 << WGM12)|(1 << CS12)|(1 << CS10);		
+  38               		.loc 1 52 0
+  39 001a 8DE0      		ldi r24,lo8(13)
+  40 001c 8093 8100 		sts 129,r24
+  53:hardware.c    **** 	TIMSK1 = (1 << OCIE1A);
+  41               		.loc 1 53 0
+  42 0020 82E0      		ldi r24,lo8(2)
+  43 0022 8093 6F00 		sts 111,r24
+  54:hardware.c    **** 	
+  55:hardware.c    **** 	//External Interrupt
+  56:hardware.c    **** 	EIMSK = (1 << INT0);
+  44               		.loc 1 56 0
+  45 0026 81E0      		ldi r24,lo8(1)
+  46 0028 8DBB      		out 0x1d,r24
+  57:hardware.c    **** 	
+  58:hardware.c    **** 	//Turn of analog comparator
+  59:hardware.c    ****     ACSR = 0x80;
+  47               		.loc 1 59 0
+  48 002a 80E8      		ldi r24,lo8(-128)
+  49 002c 80BF      		out 0x30,r24
+  60:hardware.c    **** 
+  61:hardware.c    **** 	//Init UART
+  62:hardware.c    **** 	//Baudrate = 115200 bps = 10 @ 10 MHz, U2X = 1
+  63:hardware.c    **** 	//Baudrate = 57600 bps = 10 @ 10 MHz, U2X = 0
+  64:hardware.c    **** 	UBRR0 = 10;		
+  50               		.loc 1 64 0
+  51 002e 8AE0      		ldi r24,lo8(10)
+  52 0030 90E0      		ldi r25,0
+  53 0032 9093 C500 		sts 196+1,r25
+  54 0036 8093 C400 		sts 196,r24
+  65:hardware.c    **** 	UCSR0A |= (1 << U2X0);	
+  55               		.loc 1 65 0
+  56 003a E0EC      		ldi r30,lo8(-64)
+  57 003c F0E0      		ldi r31,0
+  58 003e 8081      		ld r24,Z
+  59 0040 8260      		ori r24,lo8(2)
+  60 0042 8083      		st Z,r24
+  66:hardware.c    **** 	UCSR0B = (1 << RXCIE0)|(1 << RXEN0)|(1 << TXEN0); 	
+  61               		.loc 1 66 0
+  62 0044 88E9      		ldi r24,lo8(-104)
+  63 0046 8093 C100 		sts 193,r24
+  64 004a 0895      		ret
+  65               		.cfi_endproc
+  66               	.LFE6:
+  68               	.Letext0:
+  69               		.file 2 "c:\\winavr-20100110\\avr\\include\\stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 hardware.c
+C:\Users\mcmai\AppData\Local\Temp\ccsFfdnK.s:2      *ABS*:0000003e __SP_H__
+C:\Users\mcmai\AppData\Local\Temp\ccsFfdnK.s:3      *ABS*:0000003d __SP_L__
+C:\Users\mcmai\AppData\Local\Temp\ccsFfdnK.s:4      *ABS*:0000003f __SREG__
+C:\Users\mcmai\AppData\Local\Temp\ccsFfdnK.s:5      *ABS*:00000000 __tmp_reg__
+C:\Users\mcmai\AppData\Local\Temp\ccsFfdnK.s:6      *ABS*:00000001 __zero_reg__
+C:\Users\mcmai\AppData\Local\Temp\ccsFfdnK.s:12     .text:00000000 hardware_init
+
+NO UNDEFINED SYMBOLS

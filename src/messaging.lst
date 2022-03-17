@@ -1,0 +1,265 @@
+   1               		.file	"messaging.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	message_parser
+  12               	message_parser:
+  13               	.LFB4:
+  14               		.file 1 "messaging.c"
+   1:messaging.c   **** /*
+   2:messaging.c   **** 	Copyright (c) 2022 by Martin Maier (martin@mcmaier.net)
+   3:messaging.c   **** 	
+   4:messaging.c   ****     Permission is hereby granted, free of charge, to any person 
+   5:messaging.c   ****     obtaining a copy of this software and associated documentation 
+   6:messaging.c   ****     files (the "Software"), to deal in the Software without 
+   7:messaging.c   ****     restriction, including without limitation the rights to use, copy, 
+   8:messaging.c   ****     modify, merge, publish, distribute, sublicense, and/or sell copies 
+   9:messaging.c   ****     of the Software, and to permit persons to whom the Software is 
+  10:messaging.c   ****     furnished to do so, subject to the following conditions:
+  11:messaging.c   **** 
+  12:messaging.c   ****     The above copyright notice and this permission notice shall be 
+  13:messaging.c   ****     included in all copies or substantial portions of the Software.
+  14:messaging.c   **** 
+  15:messaging.c   ****     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+  16:messaging.c   ****     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+  17:messaging.c   ****     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+  18:messaging.c   ****     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+  19:messaging.c   ****     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+  20:messaging.c   ****     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+  21:messaging.c   ****     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+  22:messaging.c   ****     DEALINGS IN THE SOFTWARE.    
+  23:messaging.c   **** */
+  24:messaging.c   **** 
+  25:messaging.c   **** #ifndef MESSAGING_C
+  26:messaging.c   **** #define MESSAGING_C
+  27:messaging.c   **** 
+  28:messaging.c   **** #include "messaging.h"
+  29:messaging.c   **** #include "crc.h"
+  30:messaging.c   **** 
+  31:messaging.c   **** #include <stdlib.h>
+  32:messaging.c   **** #include <string.h>
+  33:messaging.c   **** 
+  34:messaging.c   **** //#include "hardware.h"
+  35:messaging.c   **** //#include "ringbuffer.h"
+  36:messaging.c   **** //#include "crc.h"
+  37:messaging.c   **** //#include "uart.h"
+  38:messaging.c   **** 
+  39:messaging.c   **** //******************************************************************************
+  40:messaging.c   **** // DEFINITIONS
+  41:messaging.c   **** //******************************************************************************
+  42:messaging.c   **** 
+  43:messaging.c   **** #define DTU_PING__PACKET_ID 		0x81
+  44:messaging.c   **** #define DTU_PING__DATA_LENGTH 		0		
+  45:messaging.c   **** 
+  46:messaging.c   **** #define DTU_DATETIME__PACKET_ID 	0x80
+  47:messaging.c   **** #define DTU_DATETIME__DATA_LENGTH 	16		
+  48:messaging.c   **** 
+  49:messaging.c   **** #define INV_01__PACKET_ID 			0x01
+  50:messaging.c   **** #define INV_01__DATA_LENGTH 		16		
+  51:messaging.c   **** 
+  52:messaging.c   **** #define INV_02__PACKET_ID 			0x02
+  53:messaging.c   **** #define INV_02__DATA_LENGTH 		16		
+  54:messaging.c   **** 
+  55:messaging.c   **** #define INV_03__PACKET_ID 			0x03
+  56:messaging.c   **** #define INV_03__DATA_LENGTH 		16		
+  57:messaging.c   **** 
+  58:messaging.c   **** #define INV_04__PACKET_ID 			0x04
+  59:messaging.c   **** #define INV_04__DATA_LENGTH 		16		
+  60:messaging.c   **** 
+  61:messaging.c   **** #define INV_83__PACKET_ID 			0x83
+  62:messaging.c   **** #define INV_83__DATA_LENGTH 		12	
+  63:messaging.c   **** 
+  64:messaging.c   **** #define INV_85__PACKET_ID 			0x85
+  65:messaging.c   **** #define INV_85__DATA_LENGTH 		12		
+  66:messaging.c   **** 
+  67:messaging.c   **** #define INVALID__PACKET_ID 			0xFF
+  68:messaging.c   **** #define INVALID__DATA_LENGTH 		0	
+  69:messaging.c   **** 
+  70:messaging.c   **** 
+  71:messaging.c   **** //******************************************************************************
+  72:messaging.c   **** // FUNCTIONS
+  73:messaging.c   **** //******************************************************************************
+  74:messaging.c   **** 
+  75:messaging.c   **** Message_set_t message_set =
+  76:messaging.c   **** {
+  77:messaging.c   **** 	.dtu_ping = {.msg_packet_id = DTU_PING__PACKET_ID, .msg_data_length = DTU_PING__DATA_LENGTH},
+  78:messaging.c   **** 	.dtu_datetime = {.msg_packet_id = DTU_DATETIME__PACKET_ID, .msg_data_length = DTU_DATETIME__DATA_L
+  79:messaging.c   **** 	.inverter_01 = {.msg_packet_id = INV_01__PACKET_ID, .msg_data_length = INV_01__DATA_LENGTH},
+  80:messaging.c   **** 	.inverter_02 = {.msg_packet_id = INV_02__PACKET_ID, .msg_data_length = INV_02__DATA_LENGTH},
+  81:messaging.c   **** 	.inverter_03 = {.msg_packet_id = INV_03__PACKET_ID, .msg_data_length = INV_03__DATA_LENGTH},
+  82:messaging.c   **** 	.inverter_04 = {.msg_packet_id = INV_04__PACKET_ID, .msg_data_length = INV_04__DATA_LENGTH},
+  83:messaging.c   **** 	.inverter_83 = {.msg_packet_id = INV_83__PACKET_ID, .msg_data_length = INV_83__DATA_LENGTH},
+  84:messaging.c   **** 	.inverter_85 = {.msg_packet_id = INV_85__PACKET_ID, .msg_data_length = INV_85__DATA_LENGTH},
+  85:messaging.c   **** 	.invalid = {.msg_packet_id = INVALID__PACKET_ID, .msg_data_length = INVALID__DATA_LENGTH}
+  86:messaging.c   **** };
+  87:messaging.c   **** 
+  88:messaging.c   **** 
+  89:messaging.c   **** //******************************************************************************
+  90:messaging.c   **** // PARSER 
+  91:messaging.c   **** //******************************************************************************
+  92:messaging.c   **** 
+  93:messaging.c   **** // parses the message according to its type
+  94:messaging.c   **** //------------------------------------------------------------------------------
+  95:messaging.c   **** void message_parser(uint8_t* message)
+  96:messaging.c   **** {
+  15               		.loc 1 96 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22 0000 0895      		ret
+  23               		.cfi_endproc
+  24               	.LFE4:
+  26               	.global	message_builder
+  28               	message_builder:
+  29               	.LFB5:
+  97:messaging.c   **** 	uint8_t message_id = 0;
+  98:messaging.c   **** 
+  99:messaging.c   **** 	//static uint8_t txBuf[I2C_MAX_MESSGAGE_LENGTH];
+ 100:messaging.c   **** 	//memset(txBuf, 0, I2C_MAX_MESSGAGE_LENGTH);
+ 101:messaging.c   **** 
+ 102:messaging.c   **** 	switch(message_id)  
+ 103:messaging.c   **** 	{
+ 104:messaging.c   **** 	case INV_01__PACKET_ID:  
+ 105:messaging.c   **** 		//i2c_message__keep_alive(message,txBuf);    
+ 106:messaging.c   **** 		break;
+ 107:messaging.c   **** 		
+ 108:messaging.c   **** 	case INV_02__PACKET_ID: 
+ 109:messaging.c   **** 	// i2c_message__read_slave_message_length(message,txBuf);
+ 110:messaging.c   **** 		break;
+ 111:messaging.c   **** 
+ 112:messaging.c   **** 	case INV_03__PACKET_ID: 
+ 113:messaging.c   **** 	// i2c_message__read_slave_message_length(message,txBuf);
+ 114:messaging.c   **** 		break;
+ 115:messaging.c   **** 
+ 116:messaging.c   **** 		
+ 117:messaging.c   **** 	case INV_04__PACKET_ID: 
+ 118:messaging.c   **** 	// i2c_message__read_slave_message_length(message,txBuf);
+ 119:messaging.c   **** 		break;
+ 120:messaging.c   **** 
+ 121:messaging.c   **** 		
+ 122:messaging.c   **** 	case INV_83__PACKET_ID: 
+ 123:messaging.c   **** 	// i2c_message__read_slave_message_length(message,txBuf);
+ 124:messaging.c   **** 		break;
+ 125:messaging.c   **** 
+ 126:messaging.c   **** 		
+ 127:messaging.c   **** 	case INV_85__PACKET_ID: 
+ 128:messaging.c   **** 	// i2c_message__read_slave_message_length(message,txBuf);
+ 129:messaging.c   **** 		break;
+ 130:messaging.c   **** 
+ 131:messaging.c   **** 	default:
+ 132:messaging.c   **** 		break;
+ 133:messaging.c   **** 	}
+ 134:messaging.c   **** }
+ 135:messaging.c   **** 
+ 136:messaging.c   **** 
+ 137:messaging.c   **** // parses the message according to its type
+ 138:messaging.c   **** //------------------------------------------------------------------------------
+ 139:messaging.c   **** uint8_t message_builder(Message_t* message, uint8_t id)
+ 140:messaging.c   **** {
+  30               		.loc 1 140 0
+  31               		.cfi_startproc
+  32               	.LVL1:
+  33               	/* prologue: function */
+  34               	/* frame size = 0 */
+  35               	/* stack size = 0 */
+  36               	.L__stack_usage = 0
+ 141:messaging.c   **** 	if(id == DTU_PING__PACKET_ID)
+  37               		.loc 1 141 0
+  38 0002 6138      		cpi r22,lo8(-127)
+  39 0004 01F4      		brne .L3
+ 142:messaging.c   **** 	{
+ 143:messaging.c   **** 		message->command = 0x15;
+  40               		.loc 1 143 0
+  41 0006 25E1      		ldi r18,lo8(21)
+  42 0008 FC01      		movw r30,r24
+  43 000a 2083      		st Z,r18
+ 144:messaging.c   **** 		//message->rx_address = 0;
+ 145:messaging.c   **** 		//message->tx_address = 0;
+ 146:messaging.c   **** 		//message->crc8 = crc8_calc());
+ 147:messaging.c   **** 
+ 148:messaging.c   **** 		return DTU_PING__PACKET_ID;
+  44               		.loc 1 148 0
+  45 000c 81E8      		ldi r24,lo8(-127)
+  46               	.LVL2:
+  47 000e 0895      		ret
+  48               	.LVL3:
+  49               	.L3:
+ 149:messaging.c   **** 	}
+ 150:messaging.c   **** 	else if(id == DTU_DATETIME__PACKET_ID)
+  50               		.loc 1 150 0
+  51 0010 6038      		cpi r22,lo8(-128)
+  52 0012 01F4      		brne .L5
+ 151:messaging.c   **** 	{
+ 152:messaging.c   **** 		message->command = 0x15;
+  53               		.loc 1 152 0
+  54 0014 25E1      		ldi r18,lo8(21)
+  55 0016 FC01      		movw r30,r24
+  56 0018 2083      		st Z,r18
+ 153:messaging.c   **** 
+ 154:messaging.c   **** 		return DTU_DATETIME__PACKET_ID;
+  57               		.loc 1 154 0
+  58 001a 80E8      		ldi r24,lo8(-128)
+  59               	.LVL4:
+  60 001c 0895      		ret
+  61               	.LVL5:
+  62               	.L5:
+ 155:messaging.c   **** 	}
+ 156:messaging.c   **** 	else
+ 157:messaging.c   **** 	{
+ 158:messaging.c   **** 		return 0;
+  63               		.loc 1 158 0
+  64 001e 80E0      		ldi r24,0
+  65               	.LVL6:
+ 159:messaging.c   **** 	}
+ 160:messaging.c   **** 
+ 161:messaging.c   **** }
+  66               		.loc 1 161 0
+  67 0020 0895      		ret
+  68               		.cfi_endproc
+  69               	.LFE5:
+  71               	.global	message_set
+  72               		.data
+  75               	message_set:
+  76 0000 81        		.byte	-127
+  77 0001 00        		.byte	0
+  78 0002 80        		.byte	-128
+  79 0003 10        		.byte	16
+  80 0004 01        		.byte	1
+  81 0005 10        		.byte	16
+  82 0006 02        		.byte	2
+  83 0007 10        		.byte	16
+  84 0008 03        		.byte	3
+  85 0009 10        		.byte	16
+  86 000a 04        		.byte	4
+  87 000b 10        		.byte	16
+  88 000c 83        		.byte	-125
+  89 000d 0C        		.byte	12
+  90 000e 85        		.byte	-123
+  91 000f 0C        		.byte	12
+  92 0010 FF        		.byte	-1
+  93 0011 00        		.byte	0
+  94               		.text
+  95               	.Letext0:
+  96               		.file 2 "messaging.h"
+  97               		.file 3 "c:\\winavr-20100110\\avr\\include\\stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 messaging.c
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:2      *ABS*:0000003e __SP_H__
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:3      *ABS*:0000003d __SP_L__
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:4      *ABS*:0000003f __SREG__
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:5      *ABS*:00000000 __tmp_reg__
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:6      *ABS*:00000001 __zero_reg__
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:12     .text:00000000 message_parser
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:28     .text:00000002 message_builder
+C:\Users\mcmai\AppData\Local\Temp\cc8gI4T5.s:75     .data:00000000 message_set
+
+UNDEFINED SYMBOLS
+__do_copy_data

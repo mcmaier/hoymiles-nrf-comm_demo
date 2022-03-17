@@ -61,10 +61,10 @@ TARGET = main
 
 # List C source files here. (C dependencies are automatically generated.)
 SRC  = $(TARGET).c 
-SRC += calculation.c
 SRC += crc.c
 SRC += hardware.c
 SRC += math_functions.c
+SRC += messaging.c
 SRC += ringbuffer.c
 SRC += spi.c
 SRC += statemachine.c

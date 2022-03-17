@@ -22,18 +22,153 @@
     DEALINGS IN THE SOFTWARE.    
 */
 
-#ifndef CALCULATION_C
-#define CALCULATION_C
+#ifndef MESSAGING_C
+#define MESSAGING_C
+
+#include "messaging.h"
+#include "crc.h"
 
 #include <stdlib.h>
 #include <string.h>
-
-#include "calculation.h"
 
 //#include "hardware.h"
 //#include "ringbuffer.h"
 //#include "crc.h"
 //#include "uart.h"
+
+//******************************************************************************
+// DEFINITIONS
+//******************************************************************************
+
+#define DTU_PING__PACKET_ID 		0x81
+#define DTU_PING__DATA_LENGTH 		0		
+
+#define DTU_DATETIME__PACKET_ID 	0x80
+#define DTU_DATETIME__DATA_LENGTH 	16		
+
+#define INV_01__PACKET_ID 			0x01
+#define INV_01__DATA_LENGTH 		16		
+
+#define INV_02__PACKET_ID 			0x02
+#define INV_02__DATA_LENGTH 		16		
+
+#define INV_03__PACKET_ID 			0x03
+#define INV_03__DATA_LENGTH 		16		
+
+#define INV_04__PACKET_ID 			0x04
+#define INV_04__DATA_LENGTH 		16		
+
+#define INV_83__PACKET_ID 			0x83
+#define INV_83__DATA_LENGTH 		12	
+
+#define INV_85__PACKET_ID 			0x85
+#define INV_85__DATA_LENGTH 		12		
+
+#define INVALID__PACKET_ID 			0xFF
+#define INVALID__DATA_LENGTH 		0	
+
+
+//******************************************************************************
+// FUNCTIONS
+//******************************************************************************
+
+Message_set_t message_set =
+{
+	.dtu_ping = {.msg_packet_id = DTU_PING__PACKET_ID, .msg_data_length = DTU_PING__DATA_LENGTH},
+	.dtu_datetime = {.msg_packet_id = DTU_DATETIME__PACKET_ID, .msg_data_length = DTU_DATETIME__DATA_LENGTH},
+	.inverter_01 = {.msg_packet_id = INV_01__PACKET_ID, .msg_data_length = INV_01__DATA_LENGTH},
+	.inverter_02 = {.msg_packet_id = INV_02__PACKET_ID, .msg_data_length = INV_02__DATA_LENGTH},
+	.inverter_03 = {.msg_packet_id = INV_03__PACKET_ID, .msg_data_length = INV_03__DATA_LENGTH},
+	.inverter_04 = {.msg_packet_id = INV_04__PACKET_ID, .msg_data_length = INV_04__DATA_LENGTH},
+	.inverter_83 = {.msg_packet_id = INV_83__PACKET_ID, .msg_data_length = INV_83__DATA_LENGTH},
+	.inverter_85 = {.msg_packet_id = INV_85__PACKET_ID, .msg_data_length = INV_85__DATA_LENGTH},
+	.invalid = {.msg_packet_id = INVALID__PACKET_ID, .msg_data_length = INVALID__DATA_LENGTH}
+};
+
+
+//******************************************************************************
+// PARSER 
+//******************************************************************************
+
+// parses the message according to its type
+//------------------------------------------------------------------------------
+void message_parser(uint8_t* message)
+{
+	uint8_t message_id = 0;
+
+	//static uint8_t txBuf[I2C_MAX_MESSGAGE_LENGTH];
+	//memset(txBuf, 0, I2C_MAX_MESSGAGE_LENGTH);
+
+	switch(message_id)  
+	{
+	case INV_01__PACKET_ID:  
+		//i2c_message__keep_alive(message,txBuf);    
+		break;
+		
+	case INV_02__PACKET_ID: 
+	// i2c_message__read_slave_message_length(message,txBuf);
+		break;
+
+	case INV_03__PACKET_ID: 
+	// i2c_message__read_slave_message_length(message,txBuf);
+		break;
+
+		
+	case INV_04__PACKET_ID: 
+	// i2c_message__read_slave_message_length(message,txBuf);
+		break;
+
+		
+	case INV_83__PACKET_ID: 
+	// i2c_message__read_slave_message_length(message,txBuf);
+		break;
+
+		
+	case INV_85__PACKET_ID: 
+	// i2c_message__read_slave_message_length(message,txBuf);
+		break;
+
+	default:
+		break;
+	}
+}
+
+
+// parses the message according to its type
+//------------------------------------------------------------------------------
+uint8_t message_builder(Message_t* message, uint8_t id)
+{
+	if(id == DTU_PING__PACKET_ID)
+	{
+		message->command = 0x15;
+		//message->rx_address = 0;
+		//message->tx_address = 0;
+		//message->crc8 = crc8_calc());
+
+		return DTU_PING__PACKET_ID;
+	}
+	else if(id == DTU_DATETIME__PACKET_ID)
+	{
+		message->command = 0x15;
+
+		return DTU_DATETIME__PACKET_ID;
+	}
+	else
+	{
+		return 0;
+	}
+
+}
+    
+
+//******************************************************************************
+// MESSAGE HANDLERS
+//******************************************************************************
+
+static void message_parse__invalid(uint8_t* data)
+{
+	
+}
 
 /*
 
