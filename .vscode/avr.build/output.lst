@@ -1,0 +1,1155 @@
+
+.vscode/avr.build/output.elf:     file format elf32-avr
+
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+__vectors():
+   0:	19 c0       	rjmp	.+50     	; 0x34 <__ctors_end>
+   2:	0a c1       	rjmp	.+532    	; 0x218 <__vector_1>
+   4:	27 c0       	rjmp	.+78     	; 0x54 <__bad_interrupt>
+   6:	26 c0       	rjmp	.+76     	; 0x54 <__bad_interrupt>
+   8:	25 c0       	rjmp	.+74     	; 0x54 <__bad_interrupt>
+   a:	24 c0       	rjmp	.+72     	; 0x54 <__bad_interrupt>
+   c:	23 c0       	rjmp	.+70     	; 0x54 <__bad_interrupt>
+   e:	22 c0       	rjmp	.+68     	; 0x54 <__bad_interrupt>
+  10:	21 c0       	rjmp	.+66     	; 0x54 <__bad_interrupt>
+  12:	20 c0       	rjmp	.+64     	; 0x54 <__bad_interrupt>
+  14:	1f c0       	rjmp	.+62     	; 0x54 <__bad_interrupt>
+  16:	8e c0       	rjmp	.+284    	; 0x134 <__vector_11>
+  18:	1d c0       	rjmp	.+58     	; 0x54 <__bad_interrupt>
+  1a:	1c c0       	rjmp	.+56     	; 0x54 <__bad_interrupt>
+  1c:	1b c0       	rjmp	.+54     	; 0x54 <__bad_interrupt>
+  1e:	1a c0       	rjmp	.+52     	; 0x54 <__bad_interrupt>
+  20:	19 c0       	rjmp	.+50     	; 0x54 <__bad_interrupt>
+  22:	f0 c0       	rjmp	.+480    	; 0x204 <__vector_17>
+  24:	5c c0       	rjmp	.+184    	; 0xde <__vector_18>
+  26:	31 c0       	rjmp	.+98     	; 0x8a <__vector_19>
+  28:	15 c0       	rjmp	.+42     	; 0x54 <__bad_interrupt>
+  2a:	14 c0       	rjmp	.+40     	; 0x54 <__bad_interrupt>
+  2c:	13 c0       	rjmp	.+38     	; 0x54 <__bad_interrupt>
+  2e:	12 c0       	rjmp	.+36     	; 0x54 <__bad_interrupt>
+  30:	11 c0       	rjmp	.+34     	; 0x54 <__bad_interrupt>
+  32:	10 c0       	rjmp	.+32     	; 0x54 <__bad_interrupt>
+
+00000034 <__ctors_end>:
+__trampolines_start():
+  34:	11 24       	eor	r1, r1
+  36:	1f be       	out	0x3f, r1	; 63
+  38:	cf ef       	ldi	r28, 0xFF	; 255
+  3a:	d4 e0       	ldi	r29, 0x04	; 4
+  3c:	de bf       	out	0x3e, r29	; 62
+  3e:	cd bf       	out	0x3d, r28	; 61
+
+00000040 <__do_clear_bss>:
+__do_clear_bss():
+  40:	21 e0       	ldi	r18, 0x01	; 1
+  42:	a0 e0       	ldi	r26, 0x00	; 0
+  44:	b1 e0       	ldi	r27, 0x01	; 1
+  46:	01 c0       	rjmp	.+2      	; 0x4a <.do_clear_bss_start>
+
+00000048 <.do_clear_bss_loop>:
+  48:	1d 92       	st	X+, r1
+
+0000004a <.do_clear_bss_start>:
+  4a:	a6 3e       	cpi	r26, 0xE6	; 230
+  4c:	b2 07       	cpc	r27, r18
+  4e:	e1 f7       	brne	.-8      	; 0x48 <.do_clear_bss_loop>
+.do_clear_bss_start():
+  50:	33 d1       	rcall	.+614    	; 0x2b8 <main>
+  52:	44 c2       	rjmp	.+1160   	; 0x4dc <_exit>
+
+00000054 <__bad_interrupt>:
+__vector_22():
+  54:	d5 cf       	rjmp	.-86     	; 0x0 <__vectors>
+
+00000056 <STATE_error__entering_handler()>:
+_Z29STATE_error__entering_handlerv():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/states.C:284
+
+//----------------------------------------------------------
+// STATE ENTRY FUNCTIONS
+//---------------------------------------------------------
+void STATE_error__entering_handler(void)
+{	
+  56:	08 95       	ret
+
+00000058 <STATE_transmit__entering_handler()>:
+_Z32STATE_transmit__entering_handlerv():
+  58:	08 95       	ret
+
+0000005a <STATE_receive__entering_handler()>:
+_Z31STATE_receive__entering_handlerv():
+  5a:	08 95       	ret
+
+0000005c <STATE_init__entering_handler()>:
+_Z28STATE_init__entering_handlerv():
+  5c:	08 95       	ret
+
+0000005e <STATE_start__entering_handler()>:
+_Z29STATE_start__entering_handlerv():
+  5e:	08 95       	ret
+
+00000060 <STATE_transmit__handler(Events_t)>:
+_Z23STATE_transmit__handler8Events_t():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/states.C:277
+	}
+
+	*/
+	
+	return ret_state;
+}	
+  60:	84 e0       	ldi	r24, 0x04	; 4
+  62:	90 e0       	ldi	r25, 0x00	; 0
+  64:	08 95       	ret
+
+00000066 <STATE_receive__handler(Events_t)>:
+_Z22STATE_receive__handler8Events_t():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/states.C:170
+			break;
+	}
+	*/
+	
+	return ret_state;
+}	
+  66:	83 e0       	ldi	r24, 0x03	; 3
+  68:	90 e0       	ldi	r25, 0x00	; 0
+  6a:	08 95       	ret
+
+0000006c <STATE_init__handler(Events_t)>:
+_Z19STATE_init__handler8Events_t():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/states.C:105
+		default:
+			break;
+	}
+	
+	return ret_state;
+}
+  6c:	82 e0       	ldi	r24, 0x02	; 2
+  6e:	90 e0       	ldi	r25, 0x00	; 0
+  70:	08 95       	ret
+
+00000072 <STATE_start__handler(Events_t)>:
+_Z20STATE_start__handler8Events_t():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/states.C:83
+		default:
+			break;
+	}
+	
+	return ret_state;
+}	
+  72:	81 e0       	ldi	r24, 0x01	; 1
+  74:	90 e0       	ldi	r25, 0x00	; 0
+  76:	08 95       	ret
+
+00000078 <STATE_error__handler(Events_t)>:
+_Z20STATE_error__handler8Events_t():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/states.C:61
+		default:
+			break;
+	}
+	
+	return ret_state;
+}	
+  78:	80 e0       	ldi	r24, 0x00	; 0
+  7a:	90 e0       	ldi	r25, 0x00	; 0
+  7c:	08 95       	ret
+
+0000007e <spi_fast_shift(unsigned char)>:
+_Z14spi_fast_shifth():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:80
+}
+
+uint8_t spi_fast_shift (uint8_t data)
+// Clocks only one byte to target device and returns the received one
+{
+    SPDR = data;
+  7e:	8e bd       	out	0x2e, r24	; 46
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:81
+    while((SPSR & (1<<SPIF))==0);
+  80:	0d b4       	in	r0, 0x2d	; 45
+  82:	07 fe       	sbrs	r0, 7
+  84:	fd cf       	rjmp	.-6      	; 0x80 <spi_fast_shift(unsigned char)+0x2>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:82
+    return SPDR;
+  86:	8e b5       	in	r24, 0x2e	; 46
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:83
+}
+  88:	08 95       	ret
+
+0000008a <__vector_19>:
+__vector_19():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:364
+ISR(UART0_TRANSMIT_INTERRUPT)
+/*************************************************************************
+Function: UART Data Register Empty interrupt
+Purpose:  called when the UART is ready to transmit the next byte
+**************************************************************************/
+{
+  8a:	1f 92       	push	r1
+  8c:	0f 92       	push	r0
+  8e:	0f b6       	in	r0, 0x3f	; 63
+  90:	0f 92       	push	r0
+  92:	11 24       	eor	r1, r1
+  94:	8f 93       	push	r24
+  96:	9f 93       	push	r25
+  98:	ef 93       	push	r30
+  9a:	ff 93       	push	r31
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:368
+    unsigned char tmptail;
+
+    
+    if ( UART_TxHead != UART_TxTail) {
+  9c:	90 91 e5 01 	lds	r25, 0x01E5	; 0x8001e5 <UART_TxHead>
+  a0:	80 91 e4 01 	lds	r24, 0x01E4	; 0x8001e4 <UART_TxTail>
+  a4:	98 17       	cp	r25, r24
+  a6:	69 f0       	breq	.+26     	; 0xc2 <__vector_19+0x38>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:370
+        /* calculate and store new buffer index */
+        tmptail = (UART_TxTail + 1) & UART_TX_BUFFER_MASK;
+  a8:	e0 91 e4 01 	lds	r30, 0x01E4	; 0x8001e4 <UART_TxTail>
+  ac:	ef 5f       	subi	r30, 0xFF	; 255
+  ae:	ef 73       	andi	r30, 0x3F	; 63
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:371
+        UART_TxTail = tmptail;
+  b0:	e0 93 e4 01 	sts	0x01E4, r30	; 0x8001e4 <UART_TxTail>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:373
+        /* get one byte from buffer and write it to UART */
+        UART0_DATA = UART_TxBuf[tmptail];  /* start transmission */
+  b4:	f0 e0       	ldi	r31, 0x00	; 0
+  b6:	ec 55       	subi	r30, 0x5C	; 92
+  b8:	fe 4f       	sbci	r31, 0xFE	; 254
+  ba:	80 81       	ld	r24, Z
+  bc:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__EEPROM_REGION_LENGTH__+0x7f00c6>
+  c0:	05 c0       	rjmp	.+10     	; 0xcc <__vector_19+0x42>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:376
+    }else{
+        /* tx buffer empty, disable UDRE interrupt */
+        UART0_CONTROL &= ~_BV(UART0_UDRIE);
+  c2:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__EEPROM_REGION_LENGTH__+0x7f00c1>
+  c6:	8f 7d       	andi	r24, 0xDF	; 223
+  c8:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__EEPROM_REGION_LENGTH__+0x7f00c1>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:378
+    }
+}
+  cc:	ff 91       	pop	r31
+  ce:	ef 91       	pop	r30
+  d0:	9f 91       	pop	r25
+  d2:	8f 91       	pop	r24
+  d4:	0f 90       	pop	r0
+  d6:	0f be       	out	0x3f, r0	; 63
+  d8:	0f 90       	pop	r0
+  da:	1f 90       	pop	r1
+  dc:	18 95       	reti
+
+000000de <__vector_18>:
+__vector_18():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:322
+ISR(UART0_RECEIVE_INTERRUPT)
+/*************************************************************************
+Function: UART Receive Complete interrupt
+Purpose:  called when the UART has received a character
+**************************************************************************/
+{
+  de:	1f 92       	push	r1
+  e0:	0f 92       	push	r0
+  e2:	0f b6       	in	r0, 0x3f	; 63
+  e4:	0f 92       	push	r0
+  e6:	11 24       	eor	r1, r1
+  e8:	2f 93       	push	r18
+  ea:	8f 93       	push	r24
+  ec:	9f 93       	push	r25
+  ee:	ef 93       	push	r30
+  f0:	ff 93       	push	r31
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:329
+    unsigned char data;
+    unsigned char usr;
+    unsigned char lastRxError;
+ 
+    /* read UART status register and UART data register */ 
+    usr  = UART0_STATUS;
+  f2:	80 91 c0 00 	lds	r24, 0x00C0	; 0x8000c0 <__EEPROM_REGION_LENGTH__+0x7f00c0>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:330
+    data = UART0_DATA;
+  f6:	90 91 c6 00 	lds	r25, 0x00C6	; 0x8000c6 <__EEPROM_REGION_LENGTH__+0x7f00c6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:338
+#if defined( AT90_UART )
+    lastRxError = (usr & (_BV(FE)|_BV(DOR)) );
+#elif defined( ATMEGA_USART )
+    lastRxError = (usr & (_BV(FE)|_BV(DOR)) );
+#elif defined( ATMEGA_USART0 )
+    lastRxError = (usr & (_BV(FE0)|_BV(DOR0)) );
+  fa:	88 71       	andi	r24, 0x18	; 24
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:344
+#elif defined ( ATMEGA_UART )
+    lastRxError = (usr & (_BV(FE)|_BV(DOR)) );
+#endif
+        
+    /* calculate buffer index */ 
+    tmphead = ( UART_RxHead + 1) & UART_RX_BUFFER_MASK;
+  fc:	e0 91 a3 01 	lds	r30, 0x01A3	; 0x8001a3 <UART_RxHead>
+ 100:	ef 5f       	subi	r30, 0xFF	; 255
+ 102:	ef 73       	andi	r30, 0x3F	; 63
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:346
+    
+    if ( tmphead == UART_RxTail ) {
+ 104:	20 91 a2 01 	lds	r18, 0x01A2	; 0x8001a2 <UART_RxTail>
+ 108:	e2 17       	cp	r30, r18
+ 10a:	39 f0       	breq	.+14     	; 0x11a <__vector_18+0x3c>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:351
+        /* error: receive buffer overflow */
+        lastRxError = UART_BUFFER_OVERFLOW >> 8;
+    }else{
+        /* store new index */
+        UART_RxHead = tmphead;
+ 10c:	e0 93 a3 01 	sts	0x01A3, r30	; 0x8001a3 <UART_RxHead>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:353
+        /* store received data in buffer */
+        UART_RxBuf[tmphead] = data;
+ 110:	f0 e0       	ldi	r31, 0x00	; 0
+ 112:	ee 59       	subi	r30, 0x9E	; 158
+ 114:	fe 4f       	sbci	r31, 0xFE	; 254
+ 116:	90 83       	st	Z, r25
+ 118:	01 c0       	rjmp	.+2      	; 0x11c <__vector_18+0x3e>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:348
+    /* calculate buffer index */ 
+    tmphead = ( UART_RxHead + 1) & UART_RX_BUFFER_MASK;
+    
+    if ( tmphead == UART_RxTail ) {
+        /* error: receive buffer overflow */
+        lastRxError = UART_BUFFER_OVERFLOW >> 8;
+ 11a:	82 e0       	ldi	r24, 0x02	; 2
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:355
+        /* store new index */
+        UART_RxHead = tmphead;
+        /* store received data in buffer */
+        UART_RxBuf[tmphead] = data;
+    }
+    UART_LastRxError = lastRxError;   		
+ 11c:	80 93 61 01 	sts	0x0161, r24	; 0x800161 <UART_LastRxError>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/uart.C:356
+}
+ 120:	ff 91       	pop	r31
+ 122:	ef 91       	pop	r30
+ 124:	9f 91       	pop	r25
+ 126:	8f 91       	pop	r24
+ 128:	2f 91       	pop	r18
+ 12a:	0f 90       	pop	r0
+ 12c:	0f be       	out	0x3f, r0	; 63
+ 12e:	0f 90       	pop	r0
+ 130:	1f 90       	pop	r1
+ 132:	18 95       	reti
+
+00000134 <__vector_11>:
+__vector_11():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:95
+ISR(SPI_STC_vect)
+{
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+ 134:	1f 92       	push	r1
+ 136:	0f 92       	push	r0
+ 138:	0f b6       	in	r0, 0x3f	; 63
+ 13a:	0f 92       	push	r0
+ 13c:	11 24       	eor	r1, r1
+ 13e:	2f 93       	push	r18
+ 140:	3f 93       	push	r19
+ 142:	4f 93       	push	r20
+ 144:	5f 93       	push	r21
+ 146:	6f 93       	push	r22
+ 148:	7f 93       	push	r23
+ 14a:	8f 93       	push	r24
+ 14c:	9f 93       	push	r25
+ 14e:	af 93       	push	r26
+ 150:	bf 93       	push	r27
+ 152:	ef 93       	push	r30
+ 154:	ff 93       	push	r31
+ 156:	cf 93       	push	r28
+ 158:	df 93       	push	r29
+ 15a:	00 d0       	rcall	.+0      	; 0x15c <__vector_11+0x28>
+ 15c:	cd b7       	in	r28, 0x3d	; 61
+ 15e:	de b7       	in	r29, 0x3e	; 62
+event_push():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:121
+// event_push
+// Pushes an event into the ringbuffer
+//------------------------------------------------------------------------------
+uint8_t event_push(Events_t event)
+{
+    Events_t temp_event = event;
+ 160:	81 e0       	ldi	r24, 0x01	; 1
+ 162:	90 e0       	ldi	r25, 0x00	; 0
+ 164:	9a 83       	std	Y+2, r25	; 0x02
+ 166:	89 83       	std	Y+1, r24	; 0x01
+ringbuffer__push():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:68
+//Returns state of buffer, Overflow in case buffer is full
+//------------------------------------------------------------------------------
+Ringbuffer_State_t  ringbuffer__push(Ringbuffer_t* buffer, uint8_t* data)
+{   
+  //Check if buffer is full
+  if(buffer->state == BUFFER_full)
+ 168:	80 91 41 01 	lds	r24, 0x0141	; 0x800141 <ringbuffer_events>
+ 16c:	90 91 42 01 	lds	r25, 0x0142	; 0x800142 <ringbuffer_events+0x1>
+ 170:	83 30       	cpi	r24, 0x03	; 3
+ 172:	91 05       	cpc	r25, r1
+ 174:	91 f1       	breq	.+100    	; 0x1da <__vector_11+0xa6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:72
+  {
+    return BUFFER_overflow;
+  }
+  else if(buffer->state == BUFFER_invalid)
+ 176:	89 2b       	or	r24, r25
+ 178:	81 f1       	breq	.+96     	; 0x1da <__vector_11+0xa6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:78
+  {
+    return BUFFER_invalid;
+  }
+  else
+  {
+    buffer->busy = 1;
+ 17a:	81 e0       	ldi	r24, 0x01	; 1
+ 17c:	80 93 47 01 	sts	0x0147, r24	; 0x800147 <ringbuffer_events+0x6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:79
+    memcpy((void *)(&buffer->p_buffer_data[buffer->write_pos * buffer->width]), (void *)data, buffer->width);
+ 180:	90 91 46 01 	lds	r25, 0x0146	; 0x800146 <ringbuffer_events+0x5>
+ 184:	80 91 44 01 	lds	r24, 0x0144	; 0x800144 <ringbuffer_events+0x3>
+ 188:	20 91 48 01 	lds	r18, 0x0148	; 0x800148 <ringbuffer_events+0x7>
+ 18c:	30 91 49 01 	lds	r19, 0x0149	; 0x800149 <ringbuffer_events+0x8>
+ 190:	49 2f       	mov	r20, r25
+ 192:	50 e0       	ldi	r21, 0x00	; 0
+ 194:	be 01       	movw	r22, r28
+ 196:	6f 5f       	subi	r22, 0xFF	; 255
+ 198:	7f 4f       	sbci	r23, 0xFF	; 255
+ 19a:	f9 01       	movw	r30, r18
+ 19c:	89 9f       	mul	r24, r25
+ 19e:	e0 0d       	add	r30, r0
+ 1a0:	f1 1d       	adc	r31, r1
+ 1a2:	11 24       	eor	r1, r1
+ 1a4:	cf 01       	movw	r24, r30
+ 1a6:	91 d1       	rcall	.+802    	; 0x4ca <memcpy>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:80
+    buffer->write_pos = (buffer->write_pos + 1) & (buffer->size - 1);
+ 1a8:	80 91 44 01 	lds	r24, 0x0144	; 0x800144 <ringbuffer_events+0x3>
+ 1ac:	91 e0       	ldi	r25, 0x01	; 1
+ 1ae:	98 0f       	add	r25, r24
+ 1b0:	80 91 45 01 	lds	r24, 0x0145	; 0x800145 <ringbuffer_events+0x4>
+ 1b4:	81 50       	subi	r24, 0x01	; 1
+ 1b6:	89 23       	and	r24, r25
+ 1b8:	80 93 44 01 	sts	0x0144, r24	; 0x800144 <ringbuffer_events+0x3>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:82
+    
+    if(buffer->write_pos == buffer->read_pos)
+ 1bc:	90 91 43 01 	lds	r25, 0x0143	; 0x800143 <ringbuffer_events+0x2>
+ 1c0:	89 13       	cpse	r24, r25
+ 1c2:	03 c0       	rjmp	.+6      	; 0x1ca <__vector_11+0x96>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:84
+    {
+      buffer->state = BUFFER_full;
+ 1c4:	83 e0       	ldi	r24, 0x03	; 3
+ 1c6:	90 e0       	ldi	r25, 0x00	; 0
+ 1c8:	02 c0       	rjmp	.+4      	; 0x1ce <__vector_11+0x9a>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:88
+    }
+    else
+    {
+      buffer->state = BUFFER_normal;
+ 1ca:	82 e0       	ldi	r24, 0x02	; 2
+ 1cc:	90 e0       	ldi	r25, 0x00	; 0
+ 1ce:	90 93 42 01 	sts	0x0142, r25	; 0x800142 <ringbuffer_events+0x1>
+ 1d2:	80 93 41 01 	sts	0x0141, r24	; 0x800141 <ringbuffer_events>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:91
+    }
+    
+    buffer->busy = 0;
+ 1d6:	10 92 47 01 	sts	0x0147, r1	; 0x800147 <ringbuffer_events+0x6>
+__vector_11():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:97
+	event_push(EVENT_timer_tick);
+}
+ 1da:	0f 90       	pop	r0
+ 1dc:	0f 90       	pop	r0
+ 1de:	df 91       	pop	r29
+ 1e0:	cf 91       	pop	r28
+ 1e2:	ff 91       	pop	r31
+ 1e4:	ef 91       	pop	r30
+ 1e6:	bf 91       	pop	r27
+ 1e8:	af 91       	pop	r26
+ 1ea:	9f 91       	pop	r25
+ 1ec:	8f 91       	pop	r24
+ 1ee:	7f 91       	pop	r23
+ 1f0:	6f 91       	pop	r22
+ 1f2:	5f 91       	pop	r21
+ 1f4:	4f 91       	pop	r20
+ 1f6:	3f 91       	pop	r19
+ 1f8:	2f 91       	pop	r18
+ 1fa:	0f 90       	pop	r0
+ 1fc:	0f be       	out	0x3f, r0	; 63
+ 1fe:	0f 90       	pop	r0
+ 200:	1f 90       	pop	r1
+ 202:	18 95       	reti
+
+00000204 <__vector_17>:
+__vector_17():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:91
+		
+	wl_module_config_register(STATUS, status & 0x70);	
+}
+
+ISR(SPI_STC_vect)
+{
+ 204:	1f 92       	push	r1
+ 206:	0f 92       	push	r0
+ 208:	0f b6       	in	r0, 0x3f	; 63
+ 20a:	0f 92       	push	r0
+ 20c:	11 24       	eor	r1, r1
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:92
+}
+ 20e:	0f 90       	pop	r0
+ 210:	0f be       	out	0x3f, r0	; 63
+ 212:	0f 90       	pop	r0
+ 214:	1f 90       	pop	r1
+ 216:	18 95       	reti
+
+00000218 <__vector_1>:
+__vector_1():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:45
+
+volatile uint8_t PTX;
+States_t main_state;
+
+ISR(INT0_vect)
+{
+ 218:	1f 92       	push	r1
+ 21a:	0f 92       	push	r0
+ 21c:	0f b6       	in	r0, 0x3f	; 63
+ 21e:	0f 92       	push	r0
+ 220:	11 24       	eor	r1, r1
+ 222:	1f 93       	push	r17
+ 224:	2f 93       	push	r18
+ 226:	3f 93       	push	r19
+ 228:	4f 93       	push	r20
+ 22a:	5f 93       	push	r21
+ 22c:	6f 93       	push	r22
+ 22e:	7f 93       	push	r23
+ 230:	8f 93       	push	r24
+ 232:	9f 93       	push	r25
+ 234:	af 93       	push	r26
+ 236:	bf 93       	push	r27
+ 238:	ef 93       	push	r30
+ 23a:	ff 93       	push	r31
+ 23c:	cf 93       	push	r28
+ 23e:	df 93       	push	r29
+ 240:	1f 92       	push	r1
+ 242:	cd b7       	in	r28, 0x3d	; 61
+ 244:	de b7       	in	r29, 0x3e	; 62
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:49
+    volatile uint8_t status;   
+    
+	// Read wl_module status 
+	wl_module_CSN_lo;                               // Pull down chip select
+ 246:	2a 98       	cbi	0x05, 2	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:50
+	status = spi_fast_shift(NOP);					// Read status register
+ 248:	8f ef       	ldi	r24, 0xFF	; 255
+ 24a:	19 df       	rcall	.-462    	; 0x7e <spi_fast_shift(unsigned char)>
+ 24c:	89 83       	std	Y+1, r24	; 0x01
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:51
+	wl_module_CSN_hi;                               // Pull up chip select
+ 24e:	2a 9a       	sbi	0x05, 2	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:53
+	
+	switch(status & 0x70)
+ 250:	89 81       	ldd	r24, Y+1	; 0x01
+ 252:	80 77       	andi	r24, 0x70	; 112
+ 254:	80 32       	cpi	r24, 0x20	; 32
+ 256:	41 f0       	breq	.+16     	; 0x268 <__vector_1+0x50>
+ 258:	80 36       	cpi	r24, 0x60	; 96
+ 25a:	31 f0       	breq	.+12     	; 0x268 <__vector_1+0x50>
+ 25c:	80 31       	cpi	r24, 0x10	; 16
+ 25e:	31 f4       	brne	.+12     	; 0x26c <__vector_1+0x54>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:60
+		case (1 << TX_DS):		
+			PTX = 0;	
+		break;
+		
+		case (1 << MAX_RT):
+			wl_module_CSN_lo;                               // Pull down chip select
+ 260:	2a 98       	cbi	0x05, 2	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:61
+			spi_fast_shift(FLUSH_TX);						// Flush TX-FIFO
+ 262:	81 ee       	ldi	r24, 0xE1	; 225
+ 264:	0c df       	rcall	.-488    	; 0x7e <spi_fast_shift(unsigned char)>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:62
+			wl_module_CSN_hi;  
+ 266:	2a 9a       	sbi	0x05, 2	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:75
+		break;
+		
+		case ((1 << RX_DR) | (1 << TX_DS)):
+			//wl_module_get_data(rxBuf);
+			//bufferWrite(&wirelessRxBuf, rxBuf);
+			PTX = 0;
+ 268:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <_edata>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:79
+		break;	
+	}
+		
+	if (status & (1<<TX_FULL))							//TX_FIFO Full <-- this is not an IRQ
+ 26c:	89 81       	ldd	r24, Y+1	; 0x01
+ 26e:	80 ff       	sbrs	r24, 0
+ 270:	06 c0       	rjmp	.+12     	; 0x27e <__vector_1+0x66>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:81
+	{
+		wl_module_CSN_lo;  
+ 272:	2a 98       	cbi	0x05, 2	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:82
+		spi_fast_shift(FLUSH_TX);
+ 274:	81 ee       	ldi	r24, 0xE1	; 225
+ 276:	03 df       	rcall	.-506    	; 0x7e <spi_fast_shift(unsigned char)>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:83
+		wl_module_CSN_hi;  
+ 278:	2a 9a       	sbi	0x05, 2	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:84
+		PTX = 0;
+ 27a:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <_edata>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:87
+	}
+		
+	wl_module_config_register(STATUS, status & 0x70);	
+ 27e:	19 81       	ldd	r17, Y+1	; 0x01
+wl_module_config_register():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:437
+extern uint8_t wl_module_config_register(uint8_t reg, uint8_t value)
+// Clocks only one byte into the given wl-module register
+{
+	uint8_t status;
+	
+    wl_module_CSN_lo;
+ 280:	2a 98       	cbi	0x05, 2	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:438
+    status = spi_fast_shift(W_REGISTER | (REGISTER_MASK & reg));
+ 282:	87 e2       	ldi	r24, 0x27	; 39
+ 284:	fc de       	rcall	.-520    	; 0x7e <spi_fast_shift(unsigned char)>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:439
+    spi_fast_shift(value);
+ 286:	81 2f       	mov	r24, r17
+ 288:	80 77       	andi	r24, 0x70	; 112
+ 28a:	f9 de       	rcall	.-526    	; 0x7e <spi_fast_shift(unsigned char)>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:440
+    wl_module_CSN_hi;
+ 28c:	2a 9a       	sbi	0x05, 2	; 5
+__vector_1():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:88
+}
+ 28e:	0f 90       	pop	r0
+ 290:	df 91       	pop	r29
+ 292:	cf 91       	pop	r28
+ 294:	ff 91       	pop	r31
+ 296:	ef 91       	pop	r30
+ 298:	bf 91       	pop	r27
+ 29a:	af 91       	pop	r26
+ 29c:	9f 91       	pop	r25
+ 29e:	8f 91       	pop	r24
+ 2a0:	7f 91       	pop	r23
+ 2a2:	6f 91       	pop	r22
+ 2a4:	5f 91       	pop	r21
+ 2a6:	4f 91       	pop	r20
+ 2a8:	3f 91       	pop	r19
+ 2aa:	2f 91       	pop	r18
+ 2ac:	1f 91       	pop	r17
+ 2ae:	0f 90       	pop	r0
+ 2b0:	0f be       	out	0x3f, r0	; 63
+ 2b2:	0f 90       	pop	r0
+ 2b4:	1f 90       	pop	r1
+ 2b6:	18 95       	reti
+
+000002b8 <main>:
+main():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:100
+{
+	event_push(EVENT_timer_tick);
+}
+
+int main(void)
+{	
+ 2b8:	cf 93       	push	r28
+ 2ba:	df 93       	push	r29
+ 2bc:	00 d0       	rcall	.+0      	; 0x2be <main+0x6>
+ 2be:	cd b7       	in	r28, 0x3d	; 61
+ 2c0:	de b7       	in	r29, 0x3e	; 62
+hardware_init():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:39
+#include "wl_module.h"
+
+void hardware_init(void)
+{
+	//Set pullup
+	PORTD |= (1 << PD2);
+ 2c2:	5a 9a       	sbi	0x0b, 2	; 11
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:42
+
+	//Configure pins as output
+	DDRB |= ((1 << PB0)|(1 << PB2)|(1 << PB3)|(1 << PB5));
+ 2c4:	84 b1       	in	r24, 0x04	; 4
+ 2c6:	8d 62       	ori	r24, 0x2D	; 45
+ 2c8:	84 b9       	out	0x04, r24	; 4
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:43
+	DDRD |= (1 << PD1);
+ 2ca:	51 9a       	sbi	0x0a, 1	; 10
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:45
+	
+	LED1_DDR |= (1 << LED1_PIN);
+ 2cc:	38 9a       	sbi	0x07, 0	; 7
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:46
+	LED2_DDR |= (1 << LED2_PIN);	
+ 2ce:	39 9a       	sbi	0x07, 1	; 7
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:50
+	
+	//10 ms Timer
+	
+	OCR1A =	96;
+ 2d0:	80 e6       	ldi	r24, 0x60	; 96
+ 2d2:	90 e0       	ldi	r25, 0x00	; 0
+ 2d4:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__EEPROM_REGION_LENGTH__+0x7f0089>
+ 2d8:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__EEPROM_REGION_LENGTH__+0x7f0088>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:52
+
+	TCCR1B = (1 << WGM12)|(1 << CS12)|(1 << CS10);		
+ 2dc:	8d e0       	ldi	r24, 0x0D	; 13
+ 2de:	80 93 81 00 	sts	0x0081, r24	; 0x800081 <__EEPROM_REGION_LENGTH__+0x7f0081>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:53
+	TIMSK1 = (1 << OCIE1A);
+ 2e2:	42 e0       	ldi	r20, 0x02	; 2
+ 2e4:	40 93 6f 00 	sts	0x006F, r20	; 0x80006f <__EEPROM_REGION_LENGTH__+0x7f006f>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:56
+	
+	//External Interrupt
+	EIMSK = (1 << INT0);
+ 2e8:	81 e0       	ldi	r24, 0x01	; 1
+ 2ea:	8d bb       	out	0x1d, r24	; 29
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:59
+	
+	//Turn of analog comparator
+    ACSR = 0x80;
+ 2ec:	90 e8       	ldi	r25, 0x80	; 128
+ 2ee:	90 bf       	out	0x30, r25	; 48
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:64
+
+	//Init UART
+	//Baudrate = 115200 bps = 10 @ 10 MHz, U2X = 1
+	//Baudrate = 57600 bps = 10 @ 10 MHz, U2X = 0
+	UBRR0 = 10;		
+ 2f0:	2a e0       	ldi	r18, 0x0A	; 10
+ 2f2:	30 e0       	ldi	r19, 0x00	; 0
+ 2f4:	30 93 c5 00 	sts	0x00C5, r19	; 0x8000c5 <__EEPROM_REGION_LENGTH__+0x7f00c5>
+ 2f8:	20 93 c4 00 	sts	0x00C4, r18	; 0x8000c4 <__EEPROM_REGION_LENGTH__+0x7f00c4>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:65
+	UCSR0A |= (1 << U2X0);	
+ 2fc:	90 91 c0 00 	lds	r25, 0x00C0	; 0x8000c0 <__EEPROM_REGION_LENGTH__+0x7f00c0>
+ 300:	92 60       	ori	r25, 0x02	; 2
+ 302:	90 93 c0 00 	sts	0x00C0, r25	; 0x8000c0 <__EEPROM_REGION_LENGTH__+0x7f00c0>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/hardware.C:66
+	UCSR0B = (1 << RXCIE0)|(1 << RXEN0)|(1 << TXEN0); 
+ 306:	98 e9       	ldi	r25, 0x98	; 152
+ 308:	90 93 c1 00 	sts	0x00C1, r25	; 0x8000c1 <__EEPROM_REGION_LENGTH__+0x7f00c1>
+wl_module_init():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:49
+void wl_module_init() 
+// Initializes pins and interrupt to communicate with the wl_module
+// Should be called in the early initializing phase at startup.
+{
+    // Define CSN and CE as Output and set them to default
+    DDRB |= (1 << CSN);
+ 30c:	22 9a       	sbi	0x04, 2	; 4
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:50
+	DDRB |= (1 << CE);
+ 30e:	20 9a       	sbi	0x04, 0	; 4
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:51
+    wl_module_CE_lo;
+ 310:	28 98       	cbi	0x05, 0	; 5
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/wl_module.C:52
+    wl_module_CSN_hi;
+ 312:	2a 9a       	sbi	0x05, 2	; 5
+spi_init():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:39
+
+
+void spi_init()
+// Initialize pins for spi communication
+{
+    DDR_SPI &= ~((1<<DD_MOSI)|(1<<DD_MISO)|(1<<DD_SS)|(1<<DD_SCK));
+ 314:	94 b1       	in	r25, 0x04	; 4
+ 316:	95 7c       	andi	r25, 0xC5	; 197
+ 318:	94 b9       	out	0x04, r25	; 4
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:41
+    // Define the following pins as output
+    DDR_SPI |= ((1<<DD_MOSI)|(1<<DD_SS)|(1<<DD_SCK));
+ 31a:	94 b1       	in	r25, 0x04	; 4
+ 31c:	9a 62       	ori	r25, 0x2A	; 42
+ 31e:	94 b9       	out	0x04, r25	; 4
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:50
+            (0<<SPIE)|              // SPI Interupt Enable
+            (0<<DORD)|              // Data Order (0:MSB first / 1:LSB first)
+            (1<<MSTR)|              // Master/Slave select   
+            (0<<SPR1)|(1<<SPR0)|    // SPI Clock Rate
+            (0<<CPOL)|              // Clock Polarity (0:SCK low / 1:SCK hi when idle)
+            (0<<CPHA));             // Clock Phase (0:leading / 1:trailing edge sampling)
+ 320:	91 e5       	ldi	r25, 0x51	; 81
+ 322:	9c bd       	out	0x2c, r25	; 44
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/spi.C:52
+
+    SPSR = (1<<SPI2X);              // Double Clock Rate
+ 324:	8d bd       	out	0x2d, r24	; 45
+ringbuffer__init():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:45
+//------------------------------------------------------------------------------
+Ringbuffer_State_t ringbuffer__init(Ringbuffer_t *buffer, uint8_t *p_array, uint8_t buf_size, uint8_t buf_width)
+{
+  if((buf_width != 1) || (buf_width != 2) || (buf_width != 4))
+  {
+    buffer->state = BUFFER_empty;  
+ 326:	21 e0       	ldi	r18, 0x01	; 1
+ 328:	30 e0       	ldi	r19, 0x00	; 0
+ 32a:	30 93 42 01 	sts	0x0142, r19	; 0x800142 <ringbuffer_events+0x1>
+ 32e:	20 93 41 01 	sts	0x0141, r18	; 0x800141 <ringbuffer_events>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:46
+    buffer->write_pos = 0;
+ 332:	10 92 44 01 	sts	0x0144, r1	; 0x800144 <ringbuffer_events+0x3>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:47
+    buffer->read_pos = 0;
+ 336:	10 92 43 01 	sts	0x0143, r1	; 0x800143 <ringbuffer_events+0x2>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:48
+    buffer->busy = 0;
+ 33a:	10 92 47 01 	sts	0x0147, r1	; 0x800147 <ringbuffer_events+0x6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:49
+    buffer->size = buf_size;
+ 33e:	90 e2       	ldi	r25, 0x20	; 32
+ 340:	90 93 45 01 	sts	0x0145, r25	; 0x800145 <ringbuffer_events+0x4>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:50
+    buffer->width = buf_width;
+ 344:	40 93 46 01 	sts	0x0146, r20	; 0x800146 <ringbuffer_events+0x5>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:51
+    buffer->p_buffer_data = p_array;
+ 348:	41 e0       	ldi	r20, 0x01	; 1
+ 34a:	51 e0       	ldi	r21, 0x01	; 1
+ 34c:	50 93 49 01 	sts	0x0149, r21	; 0x800149 <ringbuffer_events+0x8>
+ 350:	40 93 48 01 	sts	0x0148, r20	; 0x800148 <ringbuffer_events+0x7>
+state_machine__init():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:70
+States_t state_machine__init(void)
+{
+  ringbuffer__init(&ringbuffer_events, ringbuffer_events__data, EVENT_BUFFER_LENGTH, EVENT_BUFFER_WIDTH);
+
+  //Initialize function pointers
+  p_state_machine__state_function[0] = &STATE_error__handler;
+ 354:	4c e3       	ldi	r20, 0x3C	; 60
+ 356:	50 e0       	ldi	r21, 0x00	; 0
+ 358:	50 93 55 01 	sts	0x0155, r21	; 0x800155 <p_state_machine__state_function+0x1>
+ 35c:	40 93 54 01 	sts	0x0154, r20	; 0x800154 <p_state_machine__state_function>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:71
+  p_state_machine__state_function[1] = &STATE_start__handler;
+ 360:	49 e3       	ldi	r20, 0x39	; 57
+ 362:	50 e0       	ldi	r21, 0x00	; 0
+ 364:	50 93 57 01 	sts	0x0157, r21	; 0x800157 <p_state_machine__state_function+0x3>
+ 368:	40 93 56 01 	sts	0x0156, r20	; 0x800156 <p_state_machine__state_function+0x2>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:72
+  p_state_machine__state_function[2] = &STATE_init__handler;
+ 36c:	46 e3       	ldi	r20, 0x36	; 54
+ 36e:	50 e0       	ldi	r21, 0x00	; 0
+ 370:	50 93 59 01 	sts	0x0159, r21	; 0x800159 <p_state_machine__state_function+0x5>
+ 374:	40 93 58 01 	sts	0x0158, r20	; 0x800158 <p_state_machine__state_function+0x4>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:73
+  p_state_machine__state_function[3] = &STATE_receive__handler;
+ 378:	43 e3       	ldi	r20, 0x33	; 51
+ 37a:	50 e0       	ldi	r21, 0x00	; 0
+ 37c:	50 93 5b 01 	sts	0x015B, r21	; 0x80015b <p_state_machine__state_function+0x7>
+ 380:	40 93 5a 01 	sts	0x015A, r20	; 0x80015a <p_state_machine__state_function+0x6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:74
+  p_state_machine__state_function[4] = &STATE_transmit__handler;
+ 384:	40 e3       	ldi	r20, 0x30	; 48
+ 386:	50 e0       	ldi	r21, 0x00	; 0
+ 388:	50 93 5d 01 	sts	0x015D, r21	; 0x80015d <p_state_machine__state_function+0x9>
+ 38c:	40 93 5c 01 	sts	0x015C, r20	; 0x80015c <p_state_machine__state_function+0x8>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:76
+
+  p_state_machine__state_entering_function[0] = &STATE_error__entering_handler;
+ 390:	4b e2       	ldi	r20, 0x2B	; 43
+ 392:	50 e0       	ldi	r21, 0x00	; 0
+ 394:	50 93 4b 01 	sts	0x014B, r21	; 0x80014b <p_state_machine__state_entering_function+0x1>
+ 398:	40 93 4a 01 	sts	0x014A, r20	; 0x80014a <p_state_machine__state_entering_function>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:77
+  p_state_machine__state_entering_function[1] = &STATE_start__entering_handler;
+ 39c:	4f e2       	ldi	r20, 0x2F	; 47
+ 39e:	50 e0       	ldi	r21, 0x00	; 0
+ 3a0:	50 93 4d 01 	sts	0x014D, r21	; 0x80014d <p_state_machine__state_entering_function+0x3>
+ 3a4:	40 93 4c 01 	sts	0x014C, r20	; 0x80014c <p_state_machine__state_entering_function+0x2>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:78
+  p_state_machine__state_entering_function[2] = &STATE_init__entering_handler;
+ 3a8:	4e e2       	ldi	r20, 0x2E	; 46
+ 3aa:	50 e0       	ldi	r21, 0x00	; 0
+ 3ac:	50 93 4f 01 	sts	0x014F, r21	; 0x80014f <p_state_machine__state_entering_function+0x5>
+ 3b0:	40 93 4e 01 	sts	0x014E, r20	; 0x80014e <p_state_machine__state_entering_function+0x4>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:79
+  p_state_machine__state_entering_function[3] = &STATE_receive__entering_handler;
+ 3b4:	4d e2       	ldi	r20, 0x2D	; 45
+ 3b6:	50 e0       	ldi	r21, 0x00	; 0
+ 3b8:	50 93 51 01 	sts	0x0151, r21	; 0x800151 <p_state_machine__state_entering_function+0x7>
+ 3bc:	40 93 50 01 	sts	0x0150, r20	; 0x800150 <p_state_machine__state_entering_function+0x6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:80
+  p_state_machine__state_entering_function[4] = &STATE_transmit__entering_handler;
+ 3c0:	4c e2       	ldi	r20, 0x2C	; 44
+ 3c2:	50 e0       	ldi	r21, 0x00	; 0
+ 3c4:	50 93 53 01 	sts	0x0153, r21	; 0x800153 <p_state_machine__state_entering_function+0x9>
+ 3c8:	40 93 52 01 	sts	0x0152, r20	; 0x800152 <p_state_machine__state_entering_function+0x8>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:82
+
+  state_machine__current_state = STATE_start;
+ 3cc:	30 93 5f 01 	sts	0x015F, r19	; 0x80015f <state_machine__current_state+0x1>
+ 3d0:	20 93 5e 01 	sts	0x015E, r18	; 0x80015e <state_machine__current_state>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:83
+  state_machine__initialized = true;
+ 3d4:	80 93 60 01 	sts	0x0160, r24	; 0x800160 <state_machine__initialized>
+_delay_ms():
+c:\winavr-20100110\avr\include\util/delay.h:187
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 3d8:	2f e9       	ldi	r18, 0x9F	; 159
+ 3da:	86 e8       	ldi	r24, 0x86	; 134
+ 3dc:	91 e0       	ldi	r25, 0x01	; 1
+ 3de:	21 50       	subi	r18, 0x01	; 1
+ 3e0:	80 40       	sbci	r24, 0x00	; 0
+ 3e2:	90 40       	sbci	r25, 0x00	; 0
+ 3e4:	e1 f7       	brne	.-8      	; 0x3de <main+0x126>
+ 3e6:	00 c0       	rjmp	.+0      	; 0x3e8 <main+0x130>
+ 3e8:	00 00       	nop
+main():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/main.C:107
+	wl_module_init();
+	state_machine__init();
+		
+	_delay_ms(50);
+
+	sei();
+ 3ea:	78 94       	sei
+ringbuffer__pop():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:113
+  {
+    return BUFFER_invalid;
+  }
+  else
+  {
+    buffer->busy = 1;
+ 3ec:	dd 24       	eor	r13, r13
+ 3ee:	d3 94       	inc	r13
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:127
+      buffer->state = BUFFER_empty;
+    }
+    //Sonst Pufferzustand normal
+    else
+    {
+      buffer->state = BUFFER_normal;
+ 3f0:	02 e0       	ldi	r16, 0x02	; 2
+ 3f2:	10 e0       	ldi	r17, 0x00	; 0
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:122
+
+    //Wenn Leseposition = Schreibposition
+    if(buffer->read_pos == buffer->write_pos)
+    {
+      //Pufferzustand leer
+      buffer->state = BUFFER_empty;
+ 3f4:	ee 24       	eor	r14, r14
+ 3f6:	e3 94       	inc	r14
+ 3f8:	f1 2c       	mov	r15, r1
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:103
+//Gets an element out of the buffer
+//------------------------------------------------------------------------------
+Ringbuffer_State_t ringbuffer__pop(Ringbuffer_t *buffer, uint8_t *data)
+{  
+  //Return error if buffer is empty
+  if(buffer->state == BUFFER_empty)
+ 3fa:	80 91 41 01 	lds	r24, 0x0141	; 0x800141 <ringbuffer_events>
+ 3fe:	90 91 42 01 	lds	r25, 0x0142	; 0x800142 <ringbuffer_events+0x1>
+ 402:	81 30       	cpi	r24, 0x01	; 1
+ 404:	91 05       	cpc	r25, r1
+ 406:	81 f1       	breq	.+96     	; 0x468 <__LOCK_REGION_LENGTH__+0x68>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:107
+  {
+    return BUFFER_underrun;
+  }
+  else if(buffer->state == BUFFER_invalid)
+ 408:	00 97       	sbiw	r24, 0x00	; 0
+ 40a:	81 f1       	breq	.+96     	; 0x46c <__LOCK_REGION_LENGTH__+0x6c>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:113
+  {
+    return BUFFER_invalid;
+  }
+  else
+  {
+    buffer->busy = 1;
+ 40c:	d0 92 47 01 	sts	0x0147, r13	; 0x800147 <ringbuffer_events+0x6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:115
+
+    memcpy((void *)data, (void *)(&buffer->p_buffer_data[buffer->read_pos * buffer->width]), buffer->width);
+ 410:	80 91 46 01 	lds	r24, 0x0146	; 0x800146 <ringbuffer_events+0x5>
+ 414:	c0 90 43 01 	lds	r12, 0x0143	; 0x800143 <ringbuffer_events+0x2>
+ 418:	48 2f       	mov	r20, r24
+ 41a:	50 e0       	ldi	r21, 0x00	; 0
+ 41c:	60 91 48 01 	lds	r22, 0x0148	; 0x800148 <ringbuffer_events+0x7>
+ 420:	70 91 49 01 	lds	r23, 0x0149	; 0x800149 <ringbuffer_events+0x8>
+ 424:	c8 9e       	mul	r12, r24
+ 426:	60 0d       	add	r22, r0
+ 428:	71 1d       	adc	r23, r1
+ 42a:	11 24       	eor	r1, r1
+ 42c:	ce 01       	movw	r24, r28
+ 42e:	01 96       	adiw	r24, 0x01	; 1
+ 430:	4c d0       	rcall	.+152    	; 0x4ca <memcpy>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:116
+    buffer->read_pos = (buffer->read_pos + 1) & (buffer->size - 1);
+ 432:	80 91 45 01 	lds	r24, 0x0145	; 0x800145 <ringbuffer_events+0x4>
+ 436:	81 50       	subi	r24, 0x01	; 1
+ 438:	c3 94       	inc	r12
+ 43a:	c8 22       	and	r12, r24
+ 43c:	c0 92 43 01 	sts	0x0143, r12	; 0x800143 <ringbuffer_events+0x2>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:119
+
+    //Wenn Leseposition = Schreibposition
+    if(buffer->read_pos == buffer->write_pos)
+ 440:	80 91 44 01 	lds	r24, 0x0144	; 0x800144 <ringbuffer_events+0x3>
+ 444:	c8 12       	cpse	r12, r24
+ 446:	05 c0       	rjmp	.+10     	; 0x452 <__LOCK_REGION_LENGTH__+0x52>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:122
+    {
+      //Pufferzustand leer
+      buffer->state = BUFFER_empty;
+ 448:	f0 92 42 01 	sts	0x0142, r15	; 0x800142 <ringbuffer_events+0x1>
+ 44c:	e0 92 41 01 	sts	0x0141, r14	; 0x800141 <ringbuffer_events>
+ 450:	04 c0       	rjmp	.+8      	; 0x45a <__LOCK_REGION_LENGTH__+0x5a>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:127
+    }
+    //Sonst Pufferzustand normal
+    else
+    {
+      buffer->state = BUFFER_normal;
+ 452:	10 93 42 01 	sts	0x0142, r17	; 0x800142 <ringbuffer_events+0x1>
+ 456:	00 93 41 01 	sts	0x0141, r16	; 0x800141 <ringbuffer_events>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:130
+    }
+    
+    buffer->busy = 0;
+ 45a:	10 92 47 01 	sts	0x0147, r1	; 0x800147 <ringbuffer_events+0x6>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:132
+
+    return buffer->state;
+ 45e:	80 91 41 01 	lds	r24, 0x0141	; 0x800141 <ringbuffer_events>
+ 462:	90 91 42 01 	lds	r25, 0x0142	; 0x800142 <ringbuffer_events+0x1>
+ 466:	02 c0       	rjmp	.+4      	; 0x46c <__LOCK_REGION_LENGTH__+0x6c>
+main():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/ringbuffer.C:105
+Ringbuffer_State_t ringbuffer__pop(Ringbuffer_t *buffer, uint8_t *data)
+{  
+  //Return error if buffer is empty
+  if(buffer->state == BUFFER_empty)
+  {
+    return BUFFER_underrun;
+ 468:	85 e0       	ldi	r24, 0x05	; 5
+ 46a:	90 e0       	ldi	r25, 0x00	; 0
+event_get():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:141
+//------------------------------------------------------------------------------
+uint8_t event_get(Events_t * p_event)
+{
+    Ringbuffer_State_t bufstate = ringbuffer__pop(&ringbuffer_events, (uint8_t *)p_event);
+
+    if((bufstate == BUFFER_normal) || (bufstate == BUFFER_empty))
+ 46c:	01 97       	sbiw	r24, 0x01	; 1
+ 46e:	02 97       	sbiw	r24, 0x02	; 2
+ 470:	20 f6       	brcc	.-120    	; 0x3fa <main+0x142>
+state_machine__calculate_state():
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:96
+//------------------------------------------------------------------------------
+States_t state_machine__calculate_state(Events_t event)
+{
+  States_t new_state = state_machine__current_state;
+
+  if(!state_machine__initialized)
+ 472:	80 91 60 01 	lds	r24, 0x0160	; 0x800160 <state_machine__initialized>
+ 476:	88 23       	and	r24, r24
+ 478:	09 f4       	brne	.+2      	; 0x47c <__LOCK_REGION_LENGTH__+0x7c>
+ 47a:	bf cf       	rjmp	.-130    	; 0x3fa <main+0x142>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:103
+    return STATE_error;
+  }
+  else
+  {
+    //Call state function
+    new_state = p_state_machine__state_function[(uint8_t)state_machine__current_state](event);
+ 47c:	e0 91 5e 01 	lds	r30, 0x015E	; 0x80015e <state_machine__current_state>
+ 480:	f0 91 5f 01 	lds	r31, 0x015F	; 0x80015f <state_machine__current_state+0x1>
+ 484:	ff 27       	eor	r31, r31
+ 486:	ee 0f       	add	r30, r30
+ 488:	ff 1f       	adc	r31, r31
+ 48a:	ec 5a       	subi	r30, 0xAC	; 172
+ 48c:	fe 4f       	sbci	r31, 0xFE	; 254
+ 48e:	01 90       	ld	r0, Z+
+ 490:	f0 81       	ld	r31, Z
+ 492:	e0 2d       	mov	r30, r0
+ 494:	89 81       	ldd	r24, Y+1	; 0x01
+ 496:	9a 81       	ldd	r25, Y+2	; 0x02
+ 498:	09 95       	icall
+ 49a:	5c 01       	movw	r10, r24
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:106
+
+    //If state has changed, call new state entering function
+    if (new_state != state_machine__current_state)
+ 49c:	80 91 5e 01 	lds	r24, 0x015E	; 0x80015e <state_machine__current_state>
+ 4a0:	90 91 5f 01 	lds	r25, 0x015F	; 0x80015f <state_machine__current_state+0x1>
+ 4a4:	a8 16       	cp	r10, r24
+ 4a6:	b9 06       	cpc	r11, r25
+ 4a8:	09 f4       	brne	.+2      	; 0x4ac <__LOCK_REGION_LENGTH__+0xac>
+ 4aa:	a7 cf       	rjmp	.-178    	; 0x3fa <main+0x142>
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:108
+    {
+      p_state_machine__state_entering_function[(uint8_t)new_state]();
+ 4ac:	f5 01       	movw	r30, r10
+ 4ae:	ff 27       	eor	r31, r31
+ 4b0:	ee 0f       	add	r30, r30
+ 4b2:	ff 1f       	adc	r31, r31
+ 4b4:	e6 5b       	subi	r30, 0xB6	; 182
+ 4b6:	fe 4f       	sbci	r31, 0xFE	; 254
+ 4b8:	01 90       	ld	r0, Z+
+ 4ba:	f0 81       	ld	r31, Z
+ 4bc:	e0 2d       	mov	r30, r0
+ 4be:	09 95       	icall
+C:\Users\mcmai\Documents\_DEV\AVR\hoymiles-nrf-comm/src/statemachine.C:109
+      state_machine__current_state = new_state;
+ 4c0:	b0 92 5f 01 	sts	0x015F, r11	; 0x80015f <state_machine__current_state+0x1>
+ 4c4:	a0 92 5e 01 	sts	0x015E, r10	; 0x80015e <state_machine__current_state>
+ 4c8:	98 cf       	rjmp	.-208    	; 0x3fa <main+0x142>
+
+000004ca <memcpy>:
+memcpy():
+ 4ca:	fb 01       	movw	r30, r22
+ 4cc:	dc 01       	movw	r26, r24
+ 4ce:	02 c0       	rjmp	.+4      	; 0x4d4 <memcpy+0xa>
+ 4d0:	01 90       	ld	r0, Z+
+ 4d2:	0d 92       	st	X+, r0
+ 4d4:	41 50       	subi	r20, 0x01	; 1
+ 4d6:	50 40       	sbci	r21, 0x00	; 0
+ 4d8:	d8 f7       	brcc	.-10     	; 0x4d0 <memcpy+0x6>
+ 4da:	08 95       	ret
+
+000004dc <_exit>:
+exit():
+ 4dc:	f8 94       	cli
+
+000004de <__stop_program>:
+__stop_program():
+ 4de:	ff cf       	rjmp	.-2      	; 0x4de <__stop_program>
