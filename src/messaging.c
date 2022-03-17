@@ -69,7 +69,7 @@
 
 
 //******************************************************************************
-// FUNCTIONS
+// VARIABLES
 //******************************************************************************
 
 Message_set_t message_set =
@@ -85,6 +85,19 @@ Message_set_t message_set =
 	.invalid = {.msg_packet_id = INVALID__PACKET_ID, .msg_data_length = INVALID__DATA_LENGTH}
 };
 
+//******************************************************************************
+// FUNCTIONS 
+//******************************************************************************
+
+void messaging_set_dtu_address(uint8_t* input)
+{
+	memcpy(dtu_address, input, 4);	
+}
+
+void messaging_set_inv_address(uint8_t* input)
+{
+	memcpy(inv_address, input, 4);	
+}
 
 //******************************************************************************
 // PARSER 

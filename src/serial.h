@@ -22,84 +22,70 @@
     DEALINGS IN THE SOFTWARE.    
 */
 
-#ifndef MESSAGING_H
-#define MESSAGING_H
+#ifndef SERIAL_H
+#define SERIAL_H
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
+
+#include "hardware.h"
+#include "ringbuffer.h"
+#include "uart.h"
 
 //******************************************************************************
 // CONDITIONAL COMPILATION
 //******************************************************************************
 
-#ifdef MESSAGING_C
-#define XTRN_MESSAGING
+#ifdef SERIAL_C
+#define XTRN_SERIAL
 #else
-#define XTRN_MESSAGING extern
+#define XTRN_SERIAL extern
 #endif
 
 //******************************************************************************
 // DEFINITIONS
 //******************************************************************************
 
-#define MAX_MSG_BUF_LENGTH 32
+#define UART_TX_BUFFER_LENGTH 32
+#define UART_RX_BUFFER_LENGTH 32
+#define UART_RX_RINGBUFFER_ELEMENTS 4
+#define UART_TX_RINGBUFFER_ELEMENTS 4
 
-typedef struct
-{
-    uint8_t msg_packet_id;
-    uint8_t msg_data_length;      
-} Message_type_t;
-
-typedef struct 
-{    
-    Message_type_t dtu_ping;
-    Message_type_t dtu_datetime;
-    Message_type_t inverter_01;
-    Message_type_t inverter_02;
-    Message_type_t inverter_03;
-    Message_type_t inverter_04;
-    Message_type_t inverter_83;
-    Message_type_t inverter_85;
-    Message_type_t invalid;
-
-} Message_set_t;
-
-typedef struct 
-{
-    uint8_t command;
-    uint8_t rx_address[4];
-    uint8_t tx_address[4];
-    Message_set_t message_type;  
-    uint8_t message_buffer[MAX_MSG_BUF_LENGTH];
-    uint8_t crc8;
-    
-} Message_t;
 
 //******************************************************************************
 // VARIABLES
 //******************************************************************************
 
-XTRN_MESSAGING uint8_t dtu_address[4];
-XTRN_MESSAGING uint8_t inv_address[4];
+XTRN_SERIAL uint8_t serial__tx_buffer[UART_TX_BUFFER_LENGTH];
 
-XTRN_MESSAGING uint32_t unix_time;
+XTRN_SERIAL uint8_t serial__rx_buffer[UART_RX_BUFFER_LENGTH];
+
+XTRN_SERIAL Ringbuffer_t serial__rx_ringbuffer;
+
+XTRN_SERIAL Ringbuffer_t serial__tx_ringbuffer;
+
+XTRN_SERIAL uint8_t serial__rx_ringbuffer_database[UART_RX_RINGBUFFER_ELEMENTS * UART_RX_BUFFER_LENGTH];
+
+XTRN_SERIAL uint8_t serial__tx_ringbuffer_database[UART_TX_RINGBUFFER_ELEMENTS * UART_TX_BUFFER_LENGTH];
+
 
 //******************************************************************************
 // FUNCTION DECLARATIONS
 //******************************************************************************
 
-XTRN_MESSAGING void messaging_set_dtu_address(uint8_t*);
+XTRN_SERIAL void serial__init(void);
 
-XTRN_MESSAGING void messaging_set_inv_address(uint8_t*);
+XTRN_SERIAL void serial__put_message(uint8_t);
 
-/*
-XTRN_CALC void sendDataStruct(uint8_t, uint8_t*);
+XTRN_SERIAL uint8_t serial__read_block(uint8_t *, uint8_t);
 
-XTRN_CALC void readReceiveBuffer(void);
+XTRN_SERIAL uint8_t serial__write_block(uint8_t*, uint8_t);
 
-XTRN_CALC void pollSerialBuffer(void);
+XTRN_SERIAL uint8_t parse_serial_input(uint8_t);
 
-XTRN_CALC void parseData(uint8_t*, uint8_t*);
-*/
 
-#endif /* MESSAGING_H */
+
+#endif
+
+

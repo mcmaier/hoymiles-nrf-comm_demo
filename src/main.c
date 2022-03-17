@@ -108,13 +108,13 @@ int main(void)
 
 	while(1)
     {		
-		/*
+		
 		Events_t temp_event;
 
 		while (event_get(&temp_event))
 		{
 			main_state = state_machine__calculate_state(temp_event);
-		}*/
+		}
 	}
 }
 

@@ -24,10 +24,14 @@
  
 #include <util/delay.h>
 #include <avr/sleep.h>
+#include <avr/pgmspace.h>
 
+#include "hardware.h"
 #include "statemachine.h"
+#include "uart.h"
+#include "serial.h"
 //#include "ringbuffer.h"
-//#include "hardware.h"
+
 //#include "calculation.h"
 //#include "uart.h"
 //#include "spi.h"
@@ -35,9 +39,12 @@
 //#include "wl_module.h"
 
 extern volatile uint8_t PTX;
-static uint16_t timer;
+static uint32_t timer;
+static uint8_t init_step;
 
 //static uint8_t payload[16];
+
+#define INIT_TIMEOUT	3000
 
 //----------------------------------------------------------
 // ERROR STATE HANDLER
@@ -72,7 +79,21 @@ States_t STATE_start__handler(Events_t event)
 	switch(event)
 	{	
 		case EVENT_timer_tick:							
-				ret_state = STATE_start;					
+				if(timer++ == 1)					
+				{
+					LED1_ON;
+					LED2_ON;
+
+					serial__put_message(0);
+					serial__put_message(1);
+				}
+				else if(timer == 50)
+				{
+					LED1_OFF;
+					LED2_OFF
+					ret_state = STATE_init;
+				}
+
 			break;
 			
 		default:
@@ -90,11 +111,66 @@ States_t STATE_start__handler(Events_t event)
 States_t STATE_init__handler(Events_t event)
 {
 	States_t ret_state = STATE_init;
+	uint8_t parse_success;	
 
 	switch(event)
 	{	
 		case EVENT_timer_tick:							
-			ret_state = STATE_init;					
+				if(timer++ == 1)					
+				{
+					parse_success = 0xFF;
+					LED1_ON;
+					switch(init_step)
+					{
+						case 0: serial__put_message(2);
+						break;
+
+						case 1: serial__put_message(3);
+						break;
+
+						case 2: serial__put_message(4);
+						break;
+
+						case 3: serial__put_message(5);
+						break;
+
+						default:
+						break;
+					}					
+				}					
+				else if((timer > 1) && (timer < INIT_TIMEOUT))
+				{	
+					parse_success = parse_serial_input(init_step);
+
+					if(parse_success == init_step)
+					{
+						uart_puts_P("\r\n");
+						timer = 0;
+
+						if(++init_step > 3)
+						{
+							serial__put_message(1);
+							LED2_OFF;
+							LED1_ON;						
+							ret_state = STATE_receive;
+						}
+					}
+				}
+				else if(timer >= INIT_TIMEOUT)
+				{
+					uart_puts_P("\r\n");
+					serial__put_message(6);
+					LED2_ON;
+					ret_state = STATE_error;
+				}	
+
+				if((timer & 0x80) == 0x80)	
+				{
+					LED1_TOGGLE;
+				}														
+			break;
+
+		case EVENT_data_received:
 			break;
 			
 		default:
@@ -296,6 +372,7 @@ void STATE_start__entering_handler(void)
 void STATE_init__entering_handler(void)
 {	
 	timer = 0;
+	init_step = 0;
 }
 
 //---------------------------------------------------------

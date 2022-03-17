@@ -1,0 +1,171 @@
+/*
+	Copyright (c) 2022 by Martin Maier (martin@mcmaier.net)
+	
+    Permission is hereby granted, free of charge, to any person 
+    obtaining a copy of this software and associated documentation 
+    files (the "Software"), to deal in the Software without 
+    restriction, including without limitation the rights to use, copy, 
+    modify, merge, publish, distribute, sublicense, and/or sell copies 
+    of the Software, and to permit persons to whom the Software is 
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be 
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+    DEALINGS IN THE SOFTWARE.    
+*/
+
+#ifndef SERIAL_C
+#define SERIAL_C
+
+#include "serial.h"
+#include "uart.h"
+
+#include <avr/pgmspace.h>
+#include <stdlib.h>
+
+//******************************************************************************
+// INTERNAL VARIABLES
+//******************************************************************************
+
+static bool serial__tx_busy;
+
+static uint8_t writebuf[UART_TX_BUFFER_LENGTH];
+
+//Debug messages
+//-----------------------------------------------------------------------------
+
+#define MESSAGES 8
+
+uint8_t const message_buffer[MESSAGES][UART_TX_BUFFER_LENGTH] PROGMEM =
+    {
+        "Hoymiles NRF Interface\r\n",
+        "----------------------\r\n",
+        "Enter date YYYYMMDD: ",
+        "Enter time HH-MM-SS: ",
+        "Enter DTU serial(last 8 digt): ",
+        "Enter INV serial(last 8 digt): ",
+        "Init incomplete\r\n",
+        ""
+      };
+
+//******************************************************************************
+// FUNCTIONS
+//******************************************************************************
+
+//serial__init
+//------------------------------------------------------------------------------
+void serial__init(void)
+{
+  // Basic Settings
+  //---------------
+
+  //Initialize Receive FIFO
+  ringbuffer__init(&serial__rx_ringbuffer, serial__rx_ringbuffer_database, UART_RX_RINGBUFFER_ELEMENTS, UART_RX_BUFFER_LENGTH);
+
+  //Initialize Transmit FIFO
+  ringbuffer__init(&serial__tx_ringbuffer, serial__tx_ringbuffer_database, UART_TX_RINGBUFFER_ELEMENTS, UART_TX_BUFFER_LENGTH);
+
+  serial__tx_busy = false;
+}
+
+//serial__init
+//------------------------------------------------------------------------------
+uint8_t serial__write_block(uint8_t *data, uint8_t nBytes)
+{ 
+
+  uart_putc_arr(data, nBytes);
+
+  return 0;
+}
+
+//void serial__put_message(uint8_t message_nr)
+// Puts one of the predefined messages to UART
+//------------------------------------------------------------------------------
+
+void serial__put_message(uint8_t message_nr)
+{
+  if(message_nr < MESSAGES)
+  {
+    uart_puts_p(&message_buffer[message_nr]);
+  }  
+}
+
+//void serial__putparse_serial_input_message(uint8_t message_nr)
+//------------------------------------------------------------------------------
+
+/*
+tm_sec + tm_min*60 + tm_hour*3600 + tm_yday*86400 +
+    (tm_year-70)*31536000 + ((tm_year-69)/4)*86400 -
+    ((tm_year-1)/100)*86400 + ((tm_year+299)/400)*86400
+*/
+
+uint8_t parse_serial_input(uint8_t parse_nr)
+{
+  uint8_t nr_of_bytes;
+  uint8_t ret_value = 0xFF;
+  uint8_t rx_buffer[16];
+
+  uint8_t st_year[6] = {0};
+  uint8_t st_month[4]= {0};
+  uint8_t st_day[4]= {0};
+  
+  static uint16_t year;
+  static uint8_t day;
+  static uint8_t month;
+  static uint8_t hour;
+  static uint8_t minute;
+  static uint8_t second;
+
+  nr_of_bytes = uart_available();
+
+  if(nr_of_bytes)
+  {
+    memset(rx_buffer,0,16);
+    
+    for(uint8_t i = 0; i < nr_of_bytes; ++i)
+    {
+      rx_buffer[i] = (uint8_t)(uart_getc() & 0xFF);
+    }
+
+    switch (parse_nr)
+    {
+      case 0: 
+        memcpy(year,rx_buffer,4);
+        memcpy(month,rx_buffer + 4,2);
+        memcpy(day,rx_buffer + 6,2);
+
+        year = atoi(st_year);
+        month = atoi(st_month);
+        day = atoi(st_day);
+
+        uart_putc_arr(rx_buffer,nr_of_bytes);
+        break;
+
+      case 1:
+        break;
+
+      case 2:
+        break;
+
+      case 3:
+        break;
+
+      default:
+        break;
+    }
+  }  
+
+  return ret_value;
+}
+
+
+
+#endif //SERIAL

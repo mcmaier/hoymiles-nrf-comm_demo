@@ -66,6 +66,7 @@ SRC += hardware.c
 SRC += math_functions.c
 SRC += messaging.c
 SRC += ringbuffer.c
+SRC += serial.c
 SRC += spi.c
 SRC += statemachine.c
 SRC += states.c
