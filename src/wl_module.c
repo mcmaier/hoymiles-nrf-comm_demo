@@ -442,16 +442,6 @@ extern uint8_t wl_module_config_register(uint8_t reg, uint8_t value)
 	return status;
 }
 
-/*
-void wl_module_config_register(uint8_t reg, uint8_t value)
-// Clocks only one byte into the given wl-module register
-{
-    wl_module_CSN_lo;
-    spi_fast_shift(W_REGISTER | (REGISTER_MASK & reg));
-    spi_fast_shift(value);
-    wl_module_CSN_hi;
-}*/
-
 void wl_module_read_register(uint8_t reg, uint8_t * value, uint8_t len)
 // Reads an array of bytes from the given start position in the wl-module registers.
 {

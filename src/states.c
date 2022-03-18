@@ -37,7 +37,7 @@
 //#include "uart.h"
 //#include "spi.h"
 //#include "nRF24L01.h"
-//#include "wl_module.h"
+#include "wl_module.h"
 
 extern volatile uint8_t PTX;
 static uint32_t timer;
@@ -237,22 +237,6 @@ States_t STATE_receive__handler(Events_t event)
 			break;
 			
 		case EVENT_dataReceivedNRF:		
-				if(wirelessRxBuf[0] == 'M')
-				{
-					measureMode = 1;
-				}		
-				else if(wirelessRxBuf[0] == 'm')
-				{
-					measureMode = 0;
-				}
-				else if(wirelessRxBuf[0] == 'W')
-				{
-					writeMode = 1;
-				}
-				else if(wirelessRxBuf[0] == 'w')
-				{
-					writeMode = 0;
-				}
 			break;
 			
 		default:
@@ -278,6 +262,8 @@ States_t STATE_transmit__handler(Events_t event)
 
 				uart_putc_arr(tx_message.message_buffer,tx_message.message_type.msg_data_length + 11);
 				uart_puts_P("\r\n");
+
+				wl_module_send(tx_message.message_buffer,27);				
 			}
 			else if(timer == 10)
 			{
@@ -422,4 +408,7 @@ void STATE_transmit__entering_handler(void)
 	memcpy(tx_message.rx_address,inv_address,4);	
 	tx_message.message_type.msg_packet_id = DTU_DATETIME__PACKET_ID;
 	tx_message.message_type.msg_data_length = DTU_DATETIME__DATA_LENGTH;
+
+	wl_module_rx_config();
+	wl_module_tx_config(wl_module_TX_NR_0);
 }
