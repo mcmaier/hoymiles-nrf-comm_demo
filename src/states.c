@@ -31,21 +31,22 @@
 #include "uart.h"
 #include "serial.h"
 #include "messaging.h"
-//#include "ringbuffer.h"
+#include "nRF24L01.h"
 
+//#include "ringbuffer.h"
 //#include "calculation.h"
 //#include "uart.h"
 //#include "spi.h"
-//#include "nRF24L01.h"
-#include "wl_module.h"
 
-extern volatile uint8_t PTX;
+extern volatile bool message_received;
+
 static uint32_t timer;
 static uint8_t init_step;
 
-extern uint32_t sys_timer;
+uint8_t nrf_tx_addr[5];
+uint8_t nrf_rx_addr[5];
 
-//static uint8_t payload[16];
+extern uint32_t sys_timer;
 
 #define INIT_TIMEOUT	3000
 
@@ -143,19 +144,23 @@ States_t STATE_init__handler(Events_t event)
 				}					
 				else if((timer > 1) && (timer < INIT_TIMEOUT))
 				{	
-					parse_success = parse_serial_input(init_step);
-
-					if(parse_success == init_step)
+					//Only check in greater time intervals to get the whole string
+					if((timer & 0x1F) == 0x01)
 					{
-						uart_puts_P("\r\n");
-						timer = 0;
+						parse_success = parse_serial_input(init_step);
 
-						if(++init_step > 3)
+						if(parse_success == init_step)
 						{
-							serial__put_message(1);
-							LED2_OFF;
-							LED1_ON;						
-							ret_state = STATE_receive;
+							uart_puts_P("\r\n");
+							timer = 0;
+
+							if(++init_step > 3)
+							{
+								serial__put_message(1);
+								LED2_OFF;
+								LED1_ON;						
+								ret_state = STATE_receive;
+							}
 						}
 					}
 				}
@@ -172,12 +177,34 @@ States_t STATE_init__handler(Events_t event)
 					LED1_TOGGLE;					
 				}														
 			break;
-
-		case EVENT_data_received:
-			break;
 			
 		default:
 			break;
+	}
+
+	if(ret_state == STATE_receive)
+	{
+		//Set up the TX message
+		tx_message.command = 0x15;
+		memcpy(tx_message.rx_address,inv_address,4);
+		memcpy(tx_message.tx_address,dtu_address,4);			
+		tx_message.message_type.msg_packet_id = DTU_DATETIME__PACKET_ID;
+		tx_message.message_type.msg_data_length = DTU_DATETIME__DATA_LENGTH;	
+
+		nrf_rx_addr[4] = dtu_address[0];	
+		nrf_rx_addr[3] = dtu_address[1];
+		nrf_rx_addr[2] = dtu_address[2];
+		nrf_rx_addr[1] = dtu_address[3];
+		nrf_rx_addr[0] = dtu_address[4];
+
+		nrf_tx_addr[4] = inv_address[0];	
+		nrf_tx_addr[3] = inv_address[1];
+		nrf_tx_addr[2] = inv_address[2];
+		nrf_tx_addr[1] = inv_address[3];
+		nrf_tx_addr[0] = inv_address[4];
+
+		nrf24_reconfigure(3,nrf_tx_addr,nrf_rx_addr);
+
 	}
 	
 	return ret_state;
@@ -196,12 +223,17 @@ States_t STATE_receive__handler(Events_t event)
 	switch(event)
 	{	
 		case EVENT_timer_tick:
-			if(timer++ > 500)
+			if(timer++ > 200)
 			{
 				timer = 0;
 				ret_state = STATE_transmit;
 			}
 
+		break;
+
+		case EVENT_data_received:
+			uart_putc_arr(nrf24_read_message(),32);
+			uart_puts_P("\r\n");
 		break;
 
 		default:
@@ -236,7 +268,7 @@ States_t STATE_receive__handler(Events_t event)
 			}
 			break;
 			
-		case EVENT_dataReceivedNRF:		
+		case c:		
 			break;
 			
 		default:
@@ -257,16 +289,11 @@ States_t STATE_transmit__handler(Events_t event)
 		case EVENT_timer_tick:	
 			if(timer++ == 1)
 			{
-				LED2_ON;
+				LED2_ON;			
 				message_builder(&tx_message);
-
-				uart_putc_arr(tx_message.message_buffer,tx_message.message_type.msg_data_length + 11);
+				nrf24_send_message(tx_message.message_buffer,tx_message.message_type.msg_data_length + BASIC_PACKET_LENGTH);				
+				uart_putc_arr(tx_message.message_buffer,tx_message.message_type.msg_data_length + BASIC_PACKET_LENGTH);	
 				uart_puts_P("\r\n");
-
-				wl_module_send(tx_message.message_buffer,27);				
-			}
-			else if(timer == 10)
-			{
 				LED2_OFF;
 				ret_state = STATE_receive;
 			}
@@ -403,12 +430,4 @@ void STATE_receive__entering_handler(void)
 void STATE_transmit__entering_handler(void)
 {
 	timer = 0;
-	tx_message.command = 0x15;
-	memcpy(tx_message.tx_address,dtu_address,4);
-	memcpy(tx_message.rx_address,inv_address,4);	
-	tx_message.message_type.msg_packet_id = DTU_DATETIME__PACKET_ID;
-	tx_message.message_type.msg_data_length = DTU_DATETIME__DATA_LENGTH;
-
-	wl_module_rx_config();
-	wl_module_tx_config(wl_module_TX_NR_0);
 }

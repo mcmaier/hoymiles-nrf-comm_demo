@@ -33,6 +33,7 @@
 #define XTRN_HW extern
 #endif
 
+/* NO LEDs on Arduino available
 #define LED1_PIN	PC0
 #define LED1_PORT	PORTC
 #define LED1_DDR	DDRC
@@ -40,14 +41,15 @@
 #define LED2_PIN	PC1
 #define LED2_PORT	PORTC
 #define LED2_DDR	DDRC
+*/
 
-#define LED1_ON			LED1_PORT |= (1<<LED1_PIN);
-#define LED1_OFF		LED1_PORT &= ~(1<<LED1_PIN);
-#define LED1_TOGGLE		if(LED1_PORT & (1 << LED1_PIN)) LED1_OFF else LED1_ON
+#define LED1_ON			//LED1_PORT |= (1<<LED1_PIN);
+#define LED1_OFF		//LED1_PORT &= ~(1<<LED1_PIN);
+#define LED1_TOGGLE		//if(LED1_PORT & (1 << LED1_PIN)) LED1_OFF else LED1_ON
 
-#define LED2_ON			LED2_PORT |= (1<<LED2_PIN);
-#define LED2_OFF		LED2_PORT &= ~(1<<LED2_PIN);
-#define LED2_TOGGLE		if(LED2_PORT & (1 << LED2_PIN)) LED2_OFF else LED2_ON
+#define LED2_ON			//LED2_PORT |= (1<<LED2_PIN);
+#define LED2_OFF		//LED2_PORT &= ~(1<<LED2_PIN);
+#define LED2_TOGGLE		//if(LED2_PORT & (1 << LED2_PIN)) LED2_OFF else LED2_ON
 
 
 XTRN_HW void 		hardware_init(void);

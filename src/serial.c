@@ -170,7 +170,7 @@ uint8_t parse_serial_input(uint8_t parse_nr)
         break;
 
       case 2:
-
+  	  temp = 0;
       ((uint8_t*)&temp)[0] =  (rx_buffer[0] - '0')*16 + (rx_buffer[1] - '0');
       ((uint8_t*)&temp)[1] =  (rx_buffer[2] - '0')*16 + (rx_buffer[3] - '0');
       ((uint8_t*)&temp)[2] =  (rx_buffer[4] - '0')*16 + (rx_buffer[5] - '0');
@@ -182,6 +182,7 @@ uint8_t parse_serial_input(uint8_t parse_nr)
       break;
 
       case 3:
+      temp = 0;
       ((uint8_t*)&temp)[0] =  (rx_buffer[0] - '0')*16 + (rx_buffer[1] - '0');
       ((uint8_t*)&temp)[1] =  (rx_buffer[2] - '0')*16 + (rx_buffer[3] - '0');
       ((uint8_t*)&temp)[2] =  (rx_buffer[4] - '0')*16 + (rx_buffer[5] - '0');

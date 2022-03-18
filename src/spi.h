@@ -1,51 +1,26 @@
-/*
-    Copyright (c) 2007 Stefan Engelke <mbox@stefanengelke.de>
+/*  Copyright (c) 2015 B. Sidhipong <bsidhipong@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-    Permission is hereby granted, free of charge, to any person 
-    obtaining a copy of this software and associated documentation 
-    files (the "Software"), to deal in the Software without 
-    restriction, including without limitation the rights to use, copy, 
-    modify, merge, publish, distribute, sublicense, and/or sell copies 
-    of the Software, and to permit persons to whom the Software is 
-    furnished to do so, subject to the following conditions:
+#ifndef __SMALL_SPI_H__
+#define __SMALL_SPI_H__
+#include <avr/common.h>
 
-    The above copyright notice and this permission notice shall be 
-    included in all copies or substantial portions of the Software.
+void spi_master_init( void );
+void spi_bulk_send( uint8_t *send_buffer, uint8_t count );
+void spi_send( uint8_t send_data );
+void spi_bulk_exchange( uint8_t *send_buffer, uint8_t *receive_buffer, uint8_t count );
+uint8_t spi_exchange( uint8_t send_data );
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
-    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
-    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-    DEALINGS IN THE SOFTWARE.
-
-    $Id$
-*/
-
-#ifndef SPI_H_
-#define SPI_H_
-
-#ifdef SPI_C_
-#define EXT_SPI
-#else
-#define EXT_SPI extern
-#endif
-
-#include <avr/io.h>
-
-#define PORT_SPI    PORTB
-#define DDR_SPI     DDRB
-#define DD_MISO     DDB4
-#define DD_MOSI     DDB3
-#define DD_SS       DDB1
-#define DD_SCK      DDB5
-
-EXT_SPI void spi_init(void);
-EXT_SPI void spi_transfer_sync (uint8_t * dataout, uint8_t * datain, uint8_t len);
-EXT_SPI void spi_transmit_sync (uint8_t * dataout, uint8_t len);
-EXT_SPI uint8_t spi_fast_shift (uint8_t data);
-
-
-#endif /* _SPI_H_ */
+#endif /* __SPI_H__ */

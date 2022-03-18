@@ -75,6 +75,10 @@ typedef struct
     
 } Message_t;
 
+
+//Minimum number of bytes in a message (Command, Addresses, CRC8)
+#define BASIC_PACKET_LENGTH         11
+
 #define DTU_PING__PACKET_ID 		0x81
 #define DTU_PING__DATA_LENGTH 		0		
 
@@ -109,8 +113,8 @@ typedef struct
 
 extern uint32_t sys_timer;
 
-XTRN_MESSAGING uint8_t dtu_address[4];
-XTRN_MESSAGING uint8_t inv_address[4];
+XTRN_MESSAGING uint8_t dtu_address[5];
+XTRN_MESSAGING uint8_t inv_address[5];
 
 XTRN_MESSAGING Message_t tx_message;
 XTRN_MESSAGING Message_t rx_message;

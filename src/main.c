@@ -32,22 +32,26 @@
 
 #include "statemachine.h"
 #include "hardware.h"
-#include "wl_module.h"
 #include "spi.h"
 #include "nRF24L01.h"
 #include "uart.h"
 #include "crc.h"
 
 volatile uint8_t PTX;
+volatile bool message_received;
+
 States_t main_state;
 
 uint8_t sys_tick;
 uint32_t sys_timer;
 
 ISR(INT0_vect)
-{
-    volatile uint8_t status;   
+{    	
+	event_push(EVENT_data_received);
+
+	//volatile uint8_t status;   
     
+	/*
 	// Read wl_module status 
 	wl_module_CSN_lo;                               // Pull down chip select
 	status = spi_fast_shift(NOP);					// Read status register
@@ -88,6 +92,7 @@ ISR(INT0_vect)
 	}
 		
 	wl_module_config_register(STATUS, status & 0x70);	
+	*/
 }
 
 ISR(SPI_STC_vect)
@@ -108,7 +113,7 @@ ISR(TIMER1_COMPA_vect)
 int main(void)
 {	
 	hardware_init();
-	wl_module_init();
+	nrf24_init();
 	state_machine__init();
 		
 	_delay_ms(50);
@@ -116,8 +121,7 @@ int main(void)
 	sei();
 
 	while(1)
-    {		
-		
+    {				
 		Events_t temp_event;
 
 		while (event_get(&temp_event))

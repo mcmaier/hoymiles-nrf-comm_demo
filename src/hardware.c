@@ -26,29 +26,25 @@
 #define HARDWARE_C_
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
 
 #include "hardware.h"
 #include "uart.h"
-#include "wl_module.h"
 
 void hardware_init(void)
 {
-	//Set pullup
+	//Set pullup for INTERRUPT Pin
 	PORTD |= (1 << PD2);
 
 	//Configure pins as output
-	DDRB |= ((1 << PB0)|(1 << PB2)|(1 << PB3)|(1 << PB5));
+	DDRB |= ((1 << PB1)|(1 << PB2)|(1 << PB3)|(1 << PB5));
 	DDRD |= (1 << PD1);
 	
-	LED1_DDR |= (1 << LED1_PIN);
-	LED2_DDR |= (1 << LED2_PIN);	
+	//LED1_DDR |= (1 << LED1_PIN);
+	//LED2_DDR |= (1 << LED2_PIN);	
 	
-	//10 ms Timer
-	
-	OCR1A =	96;
-
+	//10 ms Timer @ 16 MHz --> OCR1A = 156
+	//10 ms Timer @ 10 MHz --> OCR1A = 96
+	OCR1A =	156;
 	TCCR1B = (1 << WGM12)|(1 << CS12)|(1 << CS10);		
 	TIMSK1 = (1 << OCIE1A);
 	
@@ -59,9 +55,12 @@ void hardware_init(void)
     ACSR = 0x80;
 
 	//Init UART
+	//Baudrate = 115200 bps = 16 @ 10 MHz, U2X = 1
+	//Baudrate = 57600 bps = 34 @ 10 MHz, U2X = 1
+
 	//Baudrate = 115200 bps = 10 @ 10 MHz, U2X = 1
 	//Baudrate = 57600 bps = 10 @ 10 MHz, U2X = 0
-	UBRR0 = 10;		
+	UBRR0 = 34;		
 	UCSR0A |= (1 << U2X0);	
 	UCSR0B = (1 << RXCIE0)|(1 << RXEN0)|(1 << TXEN0); 	
 }	

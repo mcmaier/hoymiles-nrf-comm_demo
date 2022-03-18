@@ -66,11 +66,13 @@ Message_set_t message_set =
 void messaging_set_dtu_address(uint8_t* input)
 {
 	memcpy(dtu_address, input, 4);	
+	dtu_address[4] = 1;
 }
 
 void messaging_set_inv_address(uint8_t* input)
 {
 	memcpy(inv_address, input, 4);	
+	inv_address[4] = 1;
 }
 
 //******************************************************************************

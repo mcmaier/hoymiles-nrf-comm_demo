@@ -40,7 +40,7 @@
 
 
 # MCU name
-MCU = atmega88
+MCU = atmega328p
 
 
 # Processor frequency.
@@ -48,7 +48,7 @@ MCU = atmega88
 #     processor frequency. You can then use this symbol in your source code to 
 #     calculate timings. Do NOT tack on a 'UL' at the end, this will be done
 #     automatically to create a 32-bit value in your source code.
-F_CPU = 10000000
+F_CPU = 16000000
 
 
 # Output format. (can be srec, ihex, binary)
@@ -65,13 +65,13 @@ SRC += crc.c
 SRC += hardware.c
 SRC += math_functions.c
 SRC += messaging.c
+SRC += nrf24l01.c
 SRC += ringbuffer.c
 SRC += serial.c
 SRC += spi.c
 SRC += statemachine.c
 SRC += states.c
 SRC += uart.c
-SRC += wl_module.c
 
 
 # List Assembler source files here.
